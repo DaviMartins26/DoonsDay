@@ -1,0 +1,32 @@
+/* ==========================================================================
+   styles.css - Estilo global
+   --------------------------------------------------------------------------
+   Propositalmente minimo: o layout deve parecer "HTML quase sem CSS", por
+   pedido da equipe. Mexa aqui com parcimonia.
+   ========================================================================== */
+
+/* Centraliza o conteudo numa coluna legivel e usa a fonte padrao do sistema. */
+body {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+/* Blocos de codigo (<pre>): fundo cinza claro para destacar do texto. */
+pre {
+  background: #f4f4f4;
+  padding: 0.5rem;
+  overflow: auto;
+}
+
+/* Cor do feedback de acerto. */
+.ok {
+  color: green;
+}
+
+/* Cor do feedback de erro. */
+.erro {
+  color: #b00000;
+}
