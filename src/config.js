@@ -9,13 +9,15 @@
 //   import { VIDAS_INICIAIS } from './config.js'
 // ============================================================================
 
-// Quantidade de vidas com que o usuario comeca a trilha.
-// As vidas NAO reiniciam entre os exercicios; so o botao "Recomecar" zera.
-export const VIDAS_INICIAIS = 3
+// Quantidade de ENERGIA com que o usuario comeca a trilha (a lore trata como
+// "energia" do robo, nao "vidas"). Nao reinicia entre exercicios; so o botao
+// "Recomecar" zera. Valor alinhado a regra final do TCC (RF07): 10 de energia.
+// (Para TESTAR erros/interrupcao rapidamente, baixe este valor temporariamente.)
+export const VIDAS_INICIAIS = 10
 
-// A cada quantos erros no MESMO exercicio o usuario perde 1 vida.
-// Com o valor 2, a vida cai no 2o erro (e depois no 4o, 6o...).
-export const ERROS_PARA_PERDER_VIDA = 2
+// A cada quantos erros no MESMO exercicio o usuario perde 1 de energia.
+// Alinhado ao TCC (RF08): a perda comeca a partir do 3o erro (e depois 6o, 9o...).
+export const ERROS_PARA_PERDER_VIDA = 3
 
 // XP (pontos de experiencia) ganho ao acertar um exercicio sem errar nenhuma vez.
 export const XP_BASE = 100
@@ -39,10 +41,10 @@ export const XP_BONUS_POR_STREAK = 10
 //   1) menos erros que ERROS_PARA_DICA    -> so avisa que errou (sem ajuda);
 //   2) a partir de ERROS_PARA_DICA        -> mostra uma dica simples;
 //   3) a partir de ERROS_PARA_RESPOSTA    -> mostra a explicacao completa.
-// Com os valores abaixo: erros 1-3 so "errado", 4o erro dica, 5o+ a resposta.
-// (Esquema temporario de MVP; a regra final do TCC sera definida depois.)
-export const ERROS_PARA_DICA = 4
-export const ERROS_PARA_RESPOSTA = 5
+// Alinhado ao TCC (RF06): a dica aparece a partir do 3o erro; do 4o em diante
+// mostra a explicacao completa. Erros 1-2 so sinalizam o erro.
+export const ERROS_PARA_DICA = 3
+export const ERROS_PARA_RESPOSTA = 4
 
 // Mensagem mostrada nos primeiros erros, antes de liberar a dica.
 export const MENSAGEM_ERRO_SIMPLES = 'Resposta errada. Tente de novo.'

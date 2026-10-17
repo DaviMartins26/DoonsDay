@@ -10,10 +10,20 @@ organizado em **trilhas** de exercícios de dificuldade crescente e de tipos
 variados. A proposta completa está no arquivo `DevForge-TCC.pdf`, na raiz do
 repositório.
 
-Este repositório contém a **primeira fatia funcional**: uma trilha de exemplo
-com um exercício de cada tipo, com vidas, sequência de acertos (streak) e XP.
-Ainda **não há backend nem Inteligência Artificial** nesta etapa — a correção é
-feita localmente, no navegador.
+Este repositório contém o **Bloco de Lógica de Programação**: um **catálogo de 10
+trilhas temáticas** (9 de conteúdo com 8 exercícios cada + o Projeto Final),
+somando **73 exercícios** em Python, com energia, streak, XP, dicas e coloração
+das respostas. O conteúdo é baseado na ementa de **Raciocínio Algorítmico** (1º
+período); o mapeamento de cada exercício ao material de origem está em
+[`METODOLOGIA-EXERCICIOS.md`](METODOLOGIA-EXERCICIOS.md) e a metodologia pedagógica
+em [`METODOLOGIA-TRILHA1.md`](METODOLOGIA-TRILHA1.md). Ainda **não há backend nem
+Inteligência Artificial** nesta etapa — a correção é feita localmente, no
+navegador — e há uma suíte de testes (`npm test`) que valida o gabarito de todos
+os exercícios.
+
+> As seções abaixo descrevem a mecânica do jogo e os tipos de exercício; algumas
+> ainda citam a trilha de exemplo original. Para o estado atual detalhado, veja o
+> `CLAUDE.md` e os dois documentos de metodologia acima.
 
 ---
 

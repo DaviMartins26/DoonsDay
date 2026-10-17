@@ -22,25 +22,38 @@ abertas usa IA com supervisão humana (human-in-the-loop).
 
 ## Estado atual do MVP
 
-Primeira fatia funcional: **uma trilha de exemplo com um exercício de cada tipo**.
-A verificação das respostas é **local** (sem backend e sem IA) nesta etapa.
+Fatia funcional atual: o **Bloco de Lógica de Programação** — um **catálogo de 10
+trilhas temáticas** (9 de conteúdo com 8 exercícios cada + o Projeto Final),
+somando **73 exercícios** em Python. O conteúdo é baseado na ementa de Raciocínio
+Algorítmico (1º período); o mapeamento fonte→exercício está em
+[`METODOLOGIA-EXERCICIOS.md`](METODOLOGIA-EXERCICIOS.md) e a metodologia pedagógica
+em [`METODOLOGIA-TRILHA1.md`](METODOLOGIA-TRILHA1.md). A verificação das respostas é
+**local** (sem backend e sem IA) nesta etapa, e há uma **suíte de testes** (Vitest)
+que valida o gabarito de todos os exercícios (`npm test`).
 
 Mecânicas de jogo já implementadas:
 
+- **Catálogo e trilha ativa (RF03):** a tela inicial lista as trilhas do bloco; o
+  usuário escolhe uma e pode "Voltar ao catálogo".
 - **Só avança ao acertar:** o botão "Próximo" só aparece após o acerto; errando,
   o usuário continua no mesmo exercício e pode "Tentar de novo".
-- **Vidas:** começam em `VIDAS_INICIAIS` (3) e caem 1 a cada
-  `ERROS_PARA_PERDER_VIDA` (2) erros no mesmo exercício. Ao zerar, a **lição é
-  interrompida** (tela "Lição interrompida"). **Não** reiniciam entre exercícios.
+- **Energia:** começa em `VIDAS_INICIAIS` (10, RF07) e cai 1 a cada
+  `ERROS_PARA_PERDER_VIDA` (3) erros no mesmo exercício — ou seja, a perda começa
+  no 3º erro (RF08). Ao zerar, a **lição é interrompida**. **Não** reinicia entre
+  exercícios. (A lore usa "energia", não "vida".)
 - **Streak:** sequência de acertos; sobe a cada acerto e zera ao errar.
 - **XP:** ao acertar, ganha `XP_BASE` (100) menos `XP_PENALIDADE_ERRO` (25) por
   erro (piso `XP_MINIMO` = 10), **mais** um bônus de `XP_BONUS_POR_STREAK` (10) ×
-  streak atingido. Total exibido na tela e no fim.
-- **Dicas (feedback progressivo ao errar):** nos primeiros erros só mostra
-  "errado"; a partir de `ERROS_PARA_DICA` (4) mostra a `dica` do exercício; a
-  partir de `ERROS_PARA_RESPOSTA` (5) mostra o `feedbackErrado` (resposta
-  completa). Esquema temporário de MVP (a regra final do TCC é a de RF06, dicas a
-  partir do 3º erro — a decidir).
+  streak atingido.
+- **Dicas (feedback progressivo ao errar):** erros 1-2 só "errado"; a partir de
+  `ERROS_PARA_DICA` (3) mostra a `dica`; a partir de `ERROS_PARA_RESPOSTA` (4)
+  mostra o `feedbackErrado` (resposta completa). Alinhado ao RF06.
+- **Dica sob demanda:** botão que troca **1 de energia por uma dica** (com
+  confirmação na própria página).
+- **Coloração:** nas questões de escolha, ao **acertar** a opção certa fica verde
+  e as demais vermelhas; ao errar, nada é revelado (não entrega a resposta).
+- **Pular exercício (teste):** botão que pula sem resolver — **apenas para validar
+  conteúdo**; remover na versão final.
 - Esses parâmetros ficam em `src/config.js`, fáceis de ajustar.
 
 ### Decisões tomadas
@@ -57,11 +70,12 @@ Mecânicas de jogo já implementadas:
 
 ### Tipos de exercício implementados (7 de 8)
 
-`multipla` (múltipla escolha), `lacuna` (preenchimento — hoje: escrever
-`return`), `saidaMultipla` (prever a saída em 3 caixas, todas obrigatórias),
-`acharErro` (encontrar a linha com erro), `associacao` (relacionar colunas, com
-distratores nas opções), `contrastantes` (casos contrastantes, 3 versões) e
-`parsons` (reordenar linhas).
+`multipla` (múltipla escolha), `lacuna` (preenchimento de código),
+`saidaMultipla` (prever a saída em uma ou mais caixas), `acharErro` (encontrar a
+linha com erro), `associacao` (relacionar colunas, com distratores),
+`contrastantes` (casos contrastantes) e `parsons` (reordenar linhas, aceitando
+mais de uma ordem válida quando couber). Nas questões de escolha, a opção certa
+fica verde (e as demais vermelhas) **ao acertar**.
 
 Falta o 8º tipo: **resposta aberta corrigida por IA** (depende da integração com
 a IA).
@@ -79,6 +93,9 @@ A aplicação abre em `http://localhost:5173`.
 `node_modules/` não é versionado (ver `.gitignore`). Em cada máquina nova, rode a
 instalação uma vez.
 
+Para rodar os **testes automatizados** (validam o gabarito de todos os
+exercícios): `npm test`.
+
 ## Estrutura de pastas
 
 Arquitetura em **três camadas** (refatorada em 2026-10-15 para permitir
@@ -87,23 +104,26 @@ expansão): motor, tipos e conteúdo, cada uma crescendo sem mexer nas outras.
 ```
 index.html / vite.config.js / package.json / start.ps1 / start.sh
 README.md                 — explicação para humanos (grupo/banca)
+METODOLOGIA-TRILHA1.md    — metodologia pedagógica (Cap. 3.3)
+METODOLOGIA-EXERCICIOS.md — mapa fonte (1º período) → cada exercício
 src/
   main.jsx                — ponto de entrada do React
-  App.jsx                 — raiz: escolhe a trilha e entrega ao <Jogo/>
-  config.js               — parâmetros de dificuldade (vidas, erros, XP, dicas)
+  App.jsx                 — raiz: catálogo (escolher trilha) ↔ jogo
+  config.js               — parâmetros de dificuldade (energia, erros, XP, dicas)
   styles.css              — estilo mínimo
   jogo/                   — MOTOR: estado + telas (independente do conteúdo)
-    Jogo.jsx              — estado (vidas, streak, XP, dicas) e escolha da tela
-    telas/                — TelaExercicio / TelaLicaoInterrompida / TelaConclusao
+    Jogo.jsx              — estado (energia, streak, XP, dicas) e escolha da tela
+    telas/                — TelaCatalogo / TelaExercicio / TelaLicaoInterrompida / TelaConclusao
   exercicios/             — TIPOS de exercício (um arquivo por tipo)
     registro.jsx          — mapa tipo→módulo + CampoResposta + verificar/respostaInicial/temResposta
     multipla.jsx, lacuna.jsx, saidaMultipla.jsx, acharErro.jsx,
     associacao.jsx, contrastantes.jsx, parsons.jsx, util.js
+    __tests__/exercicios.test.js — valida o gabarito de todos os exercícios (Vitest)
   trilhas/                — CONTEÚDO
-    index.js              — lista de todas as trilhas (futuro catálogo RF03)
-    exemplo/
-      index.js            — manifesto: título + lista ORDENADA dos exercícios
-      ex01-dobro.js … ex07-parsons.js  — um arquivo por exercício
+    index.js              — bloco + catálogo de trilhas (RF03)
+    logica/               — as 10 trilhas do Bloco de Lógica (uma por arquivo)
+      leitura.js, tipos.js, aritmetica.js, booleanos.js, condicoes.js,
+      repeticao.js, listas.js, funcoes.js, boaspraticas.js, projetofinal.js
 ```
 
 Cada **tipo** (`exercicios/*.jsx`) exporta `{ Campo, verificar, respostaInicial,
@@ -246,3 +266,18 @@ Monetização está fora de escopo (definição do TCC).
   estruturados no Trello (quadro TCC-Parte1): 4 novos (Metodologia, Lore,
   Assistente IA, Paralelos) + checklists nos existentes. Adicionada a seção "Git e
   sincronização" após merge com o remoto (workflow do Azure Static Web Apps).
+- **2026-10-17:** Metodologia da 1ª trilha escrita (`METODOLOGIA-TRILHA1.md`):
+  resultados de aprendizagem, tabela do Cap. 3.3 e o capstone GitHub + IA, ancorados
+  na ementa de Raciocínio Algorítmico (1º período).
+- **2026-10-17:** **Bloco de Lógica de Programação** — o app deixou de ter só a
+  trilha de exemplo e passou a um **catálogo de 10 trilhas temáticas** (RF03) com
+  **73 exercícios** em Python (`src/trilhas/logica/`), baseados na ementa; mapa
+  fonte→exercício em `METODOLOGIA-EXERCICIOS.md`. Nova `TelaCatalogo`; `App.jsx`
+  alterna catálogo ↔ jogo. Tipos de escolha ganham **coloração só no acerto**
+  (verde/vermelho) e o `parsons` aceita **várias ordens válidas** e mostra a
+  **indentação**. Motor: **dica sob demanda** (−1 energia, com confirmação) e botão
+  **"Pular exercício (teste)"**. Regras alinhadas ao TCC: **energia 10** (RF07),
+  perda e dica a partir do **3º erro** (RF06/RF08); "vida" renomeada para
+  "energia" nas telas. Adicionada **suíte de testes** (Vitest) que valida o
+  gabarito de todos os exercícios (`npm test`). Trabalho desenvolvido na pasta
+  `Trilha-exercicios` (fora do repo) e integrado aqui.

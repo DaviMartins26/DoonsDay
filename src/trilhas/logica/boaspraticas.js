@@ -1,0 +1,110 @@
+// ============================================================================
+// Trilha: Boas Praticas e Testes (Bloco Logica de Programacao) - TRILHA 9
+// ----------------------------------------------------------------------------
+// Engenharia de Software aplicada ao proprio codigo: legibilidade, nao repetir
+// (DRY) e verificacao/validacao. Dificuldade-base: a mais alta do bloco; os
+// dois ultimos ligam teste a depuracao e a casos de borda.
+// ============================================================================
+export default {
+  id: 'boaspraticas',
+  titulo: 'Boas Praticas e Testes',
+  descricao: 'Escrever codigo legivel, evitar repeticao e entender para que servem os casos de teste.',
+  exercicios: [
+    {
+      id: 'bp1',
+      tipo: 'contrastantes',
+      titulo: 'Codigo legivel',
+      enunciado: 'As duas versoes fazem a mesma conta. Qual e mais legivel?',
+      versoes: [
+        { rotulo: 'Versao A', codigo: 'preco_total = preco * quantidade\nprint(preco_total)' },
+        { rotulo: 'Versao B', codigo: 'x = a * b\nprint(x)' },
+      ],
+      correta: 0,
+      dica: 'Nomes que dizem o que a variavel guarda facilitam a leitura.',
+      feedbackCerto: 'Isso. preco_total e preco * quantidade deixam a intencao clara.',
+      feedbackErrado: 'A A e mais legivel: os nomes explicam o que o codigo faz.',
+    },
+    {
+      id: 'bp2',
+      tipo: 'multipla',
+      titulo: 'Boa pratica',
+      enunciado: 'Qual destas e uma boa pratica de programacao?',
+      opcoes: ['Usar nomes como a, b, x para tudo', 'Nomear variaveis pelo que elas guardam', 'Copiar e colar o mesmo trecho varias vezes', 'Nunca usar funcoes'],
+      correta: 1,
+      dica: 'Pense no que ajuda outra pessoa (ou voce no futuro) a entender o codigo.',
+      feedbackCerto: 'Isso. Nomes descritivos tornam o codigo claro.',
+      feedbackErrado: 'A boa pratica e nomear as variaveis pelo que elas representam.',
+    },
+    {
+      id: 'bp3',
+      tipo: 'multipla',
+      titulo: 'Melhor nome',
+      enunciado: 'Qual o melhor nome para uma variavel que guarda o preco total da compra?',
+      opcoes: ['preco_total', 'x', 'p', 'tp2'],
+      correta: 0,
+      dica: 'O nome deve dizer, sozinho, o que a variavel guarda.',
+      feedbackCerto: 'Isso. preco_total descreve exatamente o conteudo.',
+      feedbackErrado: 'preco_total e o unico que explica o conteudo sem precisar adivinhar.',
+    },
+    {
+      id: 'bp4',
+      tipo: 'associacao',
+      titulo: 'Teste e requisito',
+      enunciado: 'Associe cada caso de teste ao requisito que ele verifica.',
+      esquerda: ['entrada 18 -> "pode"', 'entrada 17 -> "nao pode"', 'entrada -1 -> "invalido"'],
+      opcoes: ['maior de idade e aceito', 'menor de idade e barrado', 'idade negativa e rejeitada', 'muda a cor do botao'],
+      correto: ['maior de idade e aceito', 'menor de idade e barrado', 'idade negativa e rejeitada'],
+      dica: 'Cada teste exercita uma regra do problema.',
+      feedbackCerto: 'Isso. Cada caso de teste verifica uma regra do requisito.',
+      feedbackErrado: 'Ligue a entrada/saida de cada teste a regra que ele confere.',
+    },
+    {
+      id: 'bp5',
+      tipo: 'multipla',
+      titulo: 'Para que serve um teste',
+      enunciado: 'Para que serve um caso de teste?',
+      opcoes: ['Deixar o codigo mais bonito', 'Verificar se o programa atende ao requisito', 'Aumentar o XP do aluno', 'Apagar variaveis sem uso'],
+      correta: 1,
+      dica: 'Teste compara o que o programa faz com o que ele deveria fazer.',
+      feedbackCerto: 'Isso. O teste confere se o programa cumpre o requisito.',
+      feedbackErrado: 'Um caso de teste verifica se o programa atende ao requisito.',
+    },
+    {
+      id: 'bp6',
+      tipo: 'contrastantes',
+      titulo: 'Nao se repita (DRY)',
+      enunciado: 'Qual versao evita repetir codigo para saudar cada nome da lista?',
+      versoes: [
+        { rotulo: 'Versao A', codigo: 'for nome in nomes:\n    print("Ola", nome)' },
+        { rotulo: 'Versao B', codigo: 'print("Ola", nomes[0])\nprint("Ola", nomes[1])\nprint("Ola", nomes[2])' },
+      ],
+      correta: 0,
+      dica: 'Repetir o mesmo print varias vezes e sinal de que um laco resolve melhor.',
+      feedbackCerto: 'Isso. O laco (A) nao se repete e funciona para qualquer tamanho da lista.',
+      feedbackErrado: 'A A usa um laco: nao repete codigo e serve para qualquer quantidade de nomes.',
+    },
+    // ---- os dois ultimos: teste ligado a depuracao e casos de borda ----
+    {
+      id: 'bp7',
+      tipo: 'acharErro',
+      titulo: 'Achar o bug pelo teste',
+      enunciado: 'O teste espera que dobro(3) seja 6, mas deu 5. Qual linha tem o bug?',
+      linhas: ['def dobro(x):', '    return x + 2', 'print(dobro(3))'],
+      linhaErrada: 1,
+      dica: 'dobro deveria MULTIPLICAR por 2, nao somar 2. Com x = 3, x + 2 da 5.',
+      feedbackCerto: 'Isso. return x + 2 esta errado; o certo e return x * 2 (dobro).',
+      feedbackErrado: 'A linha 2 soma 2 (3 + 2 = 5). O certo e return x * 2, que da 6.',
+    },
+    {
+      id: 'bp8',
+      tipo: 'multipla',
+      titulo: 'Caso de borda',
+      enunciado: 'Ao testar uma funcao que DIVIDE dois numeros, qual caso NAO pode faltar?',
+      opcoes: ['dividir por zero', 'dividir por 2', 'dividir por 10', 'dividir por 1'],
+      correta: 0,
+      dica: 'Pense no valor que faz a divisao quebrar o programa.',
+      feedbackCerto: 'Isso. Dividir por zero e o caso de borda que quebra o programa - tem que ser testado.',
+      feedbackErrado: 'O caso critico e dividir por zero: e o que pode quebrar o programa.',
+    },
+  ],
+}
