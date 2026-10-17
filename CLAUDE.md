@@ -198,6 +198,22 @@ Fora do MVP atual, ainda não implementado:
 
 Monetização está fora de escopo (definição do TCC).
 
+## Git e sincronização (fluxo do grupo)
+
+- Repositório remoto no GitHub (`DaviMartins26/DoonsDay`); branch principal:
+  `main`. `node_modules/` não é versionado.
+- O repositório está ligado ao **Azure Static Web Apps**, que criou um workflow
+  `.github/workflows/azure-static-web-apps-*.yml` direto no remoto. Por isso o
+  remoto pode ter commits que a sua máquina ainda não tem — sincronize antes de
+  trabalhar.
+- **Antes de começar:** `git pull` para trazer o que está no remoto.
+- Se o histórico divergiu, o `git pull` abre um **merge** e fica esperando você
+  concluir. Quando aparecer `All conflicts fixed but you are still merging` (ou o
+  editor da mensagem de merge), **não é erro**: rode `git commit --no-edit` para
+  fechar o merge e depois `git push`.
+- Sequência segura: `git pull` → resolver conflitos se houver → `git commit`
+  (conclui o merge) → `git push`.
+
 ## Log de progresso
 
 - **2026-10-15:** Scaffold Vite + React; trilha de exemplo com 7 tipos de
@@ -224,3 +240,9 @@ Monetização está fora de escopo (definição do TCC).
   de escolha (radio), Tab leva o foco direto ao botão Verificar (helper
   `tabParaVerificar` em `exercicios/util.js`; `TelaExercicio` passa
   `focarVerificar` via registro).
+- **2026-10-17:** Planejamento da Entrega II (template v2023v3): `ROADMAP-ENTREGA2.md`
+  (ordem das 6 frentes + checklists) e `briefings/metodologia-trilha.md` (briefing
+  para a aba de conteúdo montar a metodologia da 1ª trilha). Cards da Sprint 2
+  estruturados no Trello (quadro TCC-Parte1): 4 novos (Metodologia, Lore,
+  Assistente IA, Paralelos) + checklists nos existentes. Adicionada a seção "Git e
+  sincronização" após merge com o remoto (workflow do Azure Static Web Apps).
