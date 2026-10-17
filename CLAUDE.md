@@ -145,6 +145,34 @@ Para um protótipo de demonstração, dá para começar com o feedback "stub" lo
 (fixo/por regra, já é o caso hoje) e trocar só a camada de correção pela chamada
 ao backend quando a conta de API estiver pronta.
 
+## Deploy e infraestrutura (planejado)
+
+Ideias levantadas para quando o projeto for para a nuvem e expandido (decisão de
+2026-10-15; ainda **não** implementado). Resumo: hospedar o site é fácil; o
+esforço real é o código de auth + sincronização, não a hospedagem em si.
+
+- **Hospedagem do front (fácil):** o app é estático (`npm run build` → `dist/`).
+  Publicar em **Azure Static Web Apps**, ligado ao repositório do GitHub (build
+  `npm run build`, saída `dist`), com URL pública, HTTPS e CI/CD automáticos
+  (GitHub Actions). Free tier cobre a escala do TCC. Dá para integrar ao pipeline
+  do Azure (alinha com a disciplina de DevOps).
+- **Login e dados do usuário (sem servidor próprio):** **Firebase Auth** (já
+  previsto, RF02) para autenticação e **Firestore** para guardar por usuário as
+  vidas, energia, XP, trilha atual e progresso. O front lê/escreve direto, com
+  **regras de segurança** amarrando cada dado ao usuário logado. Assim o Azure
+  hospeda o site e o Firebase cuida de auth + dados — não precisa de banco no
+  Azure. (A config do Firebase no front é pública por design; a segurança vem das
+  regras, não de esconder essa config.)
+- **Alternativa tudo-Azure:** Static Web Apps + Azure Functions + Cosmos DB ou
+  Azure SQL. Funciona, mas dá mais trabalho que o Firebase para este caso.
+- **Backend só para a IA:** o único ponto que exige servidor é esconder a API key
+  da IA (ver "IA (próxima etapa)") — Azure Functions ou um serviço pequeno.
+- **Custo:** provável US$ 0 nos free tiers (Azure + Firebase) na escala do TCC.
+- **Anti-trapaça (futuro):** com dados gravados pelo cliente, o usuário consegue
+  editar o próprio XP pelo navegador. Aceitável no MVP; validação server-side
+  (Cloud Functions) fica para quando houver ranking/competição que exija
+  integridade.
+
 ## Backlog — o que falta (requisitos do TCC)
 
 Fora do MVP atual, ainda não implementado:
