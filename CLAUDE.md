@@ -301,3 +301,10 @@ Monetização está fora de escopo (definição do TCC).
   no `App.jsx` antes do catálogo; quadros sem arte mostram placeholder. Formato de
   dados: um módulo por arco, `baloes: [{ quem, x, y, w, texto: { pt, en } }]` —
   i18n só por string, sem reimagem. Rodou e verificado no navegador.
+- **2026-10-20:** Abertura com **arte real nos 6 quadros** (Gemini): fontes em
+  `lore/Intro/`, servidas em `public/quadrinhos/intro/Quadro1-6.jpeg`. `abertura.js`
+  aponta cada quadro e posiciona o balão dentro do balão branco já desenhado.
+  Q1 Lari no console, Q2 Lari+jogador(holograma), Q3 painel de energia, Q4 Lari
+  pisca/lâmpada(dica), Q5 Chefe na sombra, Q6 Lari acena. Verificado quadro a
+  quadro no navegador. Pendência de polimento (anotada): encaixe do texto no balão
+  não é perfeito — ok como protótipo, melhorar depois (ex.: caixa transparente).
