@@ -287,6 +287,20 @@ character") para manter consistência em todos os quadros seguintes.
 *(Afinar após a referência de design do amigo designer. Guardar cada prompt final
 junto do quadro que ele gera.)*
 
+### Assets e protótipo (estado atual)
+
+- **Concept art** (Gemini, folhas de estilo) em `lore/conceptArt/`: jogador
+  (azul), Rival (verde), Lari (âmbar, com lâmpada), Chefe (vermelho, "bombado").
+  Mais um **quadro pronto** (`UmQuadroMuitoLoucoASerUsadoAinda.jpeg`): o Chefe na
+  sombra com balão branco vazio — **usado como quadro 5 da abertura** (cópia em
+  `public/quadrinhos/chef-abertura.jpeg`).
+- **Motor de quadrinho implementado:** `src/quadrinhos/Quadrinho.jsx` (desenha
+  imagem + camada de texto + navegação + Pular + toggle PT/EN) e
+  `src/quadrinhos/abertura.js` (roteiro em dados). Plugado no `App.jsx` antes do
+  catálogo. Quadros sem arte mostram placeholder com a `descricao`.
+- **Formato de dados confirmado:** um módulo por arco; cada quadro
+  `{ id, imagem, descricao, baloes: [{ quem, x, y, w, texto: { pt, en } }] }`.
+
 ## 6. Roteiro — abertura + trilha 1 (rascunho, foco do MVP)
 
 Texto dos balões em **PT** (a versão EN é só tradução das strings, sem nova arte).

@@ -293,3 +293,11 @@ Monetização está fora de escopo (definição do TCC).
   MVP: **abertura completa + 1º exercício da trilha 1**; ciclo dramático só nas
   trilhas-marco; redenção do Rival pós-MVP. `LORE.md` traz o roteiro rascunhado e
   os prompts do Gemini (concept art base + personagens).
+- **2026-10-20:** Concept art dos 4 personagens gerada no Gemini
+  (`lore/conceptArt/`) + um quadro pronto do Chefe na sombra. Nova camada
+  **`src/quadrinhos/`**: motor `Quadrinho.jsx` (imagem + camada de texto por
+  código + navegação + Pular + toggle PT/EN) e roteiro em dados `abertura.js`
+  (6 quadros; quadro 5 usa a arte real do Chefe em `public/quadrinhos/`). Plugado
+  no `App.jsx` antes do catálogo; quadros sem arte mostram placeholder. Formato de
+  dados: um módulo por arco, `baloes: [{ quem, x, y, w, texto: { pt, en } }]` —
+  i18n só por string, sem reimagem. Rodou e verificado no navegador.
