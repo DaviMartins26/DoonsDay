@@ -354,6 +354,15 @@ só volta no fechamento da trilha (ciclo dramático), que fica para depois do MV
 (easter egg). Redenção do Rival **pós-MVP** (só sementes agora). Ciclo dramático
 só nas trilhas-marco. Foco do MVP: **abertura + trilha 1, 1º exercício**.
 
+### Pendências de arte da intro (regerar no Gemini quando houver créditos)
+
+- **Lari saindo "toda amarela"** em alguns quadros (Q2, Q3, Q4, Q6): deve ser
+  **corpo branco com detalhes âmbar/amarelo** (como na concept art), não o corpo
+  inteiro amarelo. Regerar usando a concept art da Lari como referência de cor.
+- Revisar consistência geral de traço/cor entre os 6 quadros.
+- **Intro da trilha 1** (3 quadros) ainda não gerada — Gemini sem créditos.
+- Polir o encaixe texto↔balão no componente (caixa transparente + auto-fit).
+
 ## 8. Próximos passos
 
 1. Fechar as perguntas em aberto com a equipe (nome da Lari, formato de dados).
