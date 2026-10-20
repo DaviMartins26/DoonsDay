@@ -281,3 +281,15 @@ Monetização está fora de escopo (definição do TCC).
   "energia" nas telas. Adicionada **suíte de testes** (Vitest) que valida o
   gabarito de todos os exercícios (`npm test`). Trabalho desenvolvido na pasta
   `Trilha-exercicios` (fora do repo) e integrado aqui.
+- **2026-10-20:** Lore do jogo documentada em `LORE.md` (fonte do Cap. 3.3 do
+  TCC). Premissa: jogador = IA em avaliação; trilhas = baterias de teste. Trio de
+  personagens com teoria das cores (Breaking Bad): jogador azul (honesto), Rival
+  verde (trapaceiro), Chefe vermelho ("Maior é Maior", nunca mostrado inteiro).
+  Adicionada **Lari** (nome provisório), a guia feminina amarela que apresenta a
+  DevForge e dá **dicas em troca de 1 de energia** — justifica na ficção a dica
+  sob demanda já existente. Nome real da empresa/plataforma = **DevForge**;
+  "Projeto DoomsDay" = codinome obscuro (easter egg). Quadrinhos puláveis com
+  **balões em branco + texto por código** (i18n PT/EN sem reimagem). Escopo do
+  MVP: **abertura completa + 1º exercício da trilha 1**; ciclo dramático só nas
+  trilhas-marco; redenção do Rival pós-MVP. `LORE.md` traz o roteiro rascunhado e
+  os prompts do Gemini (concept art base + personagens).
