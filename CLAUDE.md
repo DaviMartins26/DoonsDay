@@ -316,3 +316,14 @@ Monetização está fora de escopo (definição do TCC).
   Só a Trilha 1 (`leitura`) tem intro. Fluxo verificado no navegador: abertura →
   catálogo → Começar → intro (3 quadros) → Exercício 1. O **final** da trilha 1
   (ciclo dramático) ainda não foi scriptado nem gerado.
+- **2026-10-21:** **Fechamento da Trilha 1** implementado com arte real
+  (`src/quadrinhos/trilha1-final.js`, 6 quadros): Lari celebra a pontuação
+  perfeita (1160, teto honesto), o Rival aparece com 1500 (acima do máximo), o
+  placar expõe a trapaça, o Chefe premia o Rival ("Maior é Maior"), o Rival
+  debocha e a Lari vira motivacional. Quadro do Chefe usa **dois balões**
+  (Chefe+Rival). Artes em `lore/Trilha1/Fim*.jpeg` → `public/quadrinhos/trilha1/`
+  (nomes não seguem a ordem; mapeados por conteúdo; Fim7 ≈ Fim5, reserva).
+  `Jogo.jsx` ganha a prop `roteiroFinal`: toca ao concluir a trilha, antes da
+  `TelaConclusao`; `App.jsx` tem o mapa `FINAIS` (trilhaId→roteiro). Fluxo
+  verificado no navegador até a conclusão. Pendências de arte (glitches do Gemini)
+  anotadas no `LORE.md`.

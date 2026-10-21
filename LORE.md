@@ -445,8 +445,12 @@ só nas trilhas-marco. Foco do MVP: **abertura + trilha 1, 1º exercício**.
   **corpo branco com detalhes âmbar/amarelo** (como na concept art), não o corpo
   inteiro amarelo. Regerar usando a concept art da Lari como referência de cor.
 - Revisar consistência geral de traço/cor entre os 6 quadros.
-- **Intro da trilha 1** (3 quadros) ainda não gerada — Gemini sem créditos.
 - Polir o encaixe texto↔balão no componente (caixa transparente + auto-fit).
+- **Fechamento da trilha 1 (Fim5/Fim7):** aparece uma figura de **cabelo laranja
+  com cara humana** à esquerda (glitch do Gemini) — deveria ser a Lari (robô) ou
+  ninguém. Regerar. (Fim7 é quase igual a Fim5; é reserva, não usado.)
+- **Fim6:** o Rival (verde) aparece com uma **lâmpada** no topo (traço da Lari);
+  o Rival não deve ter lâmpada. Regerar.
 
 ## 8. Próximos passos
 

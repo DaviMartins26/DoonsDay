@@ -26,6 +26,7 @@ import {
 import TelaExercicio from './telas/TelaExercicio.jsx'
 import TelaLicaoInterrompida from './telas/TelaLicaoInterrompida.jsx'
 import TelaConclusao from './telas/TelaConclusao.jsx'
+import Quadrinho from '../quadrinhos/Quadrinho.jsx'
 
 // XP "base" de um exercicio acertado, descontando os erros (nunca abaixo do piso).
 function calcularXp(erros) {
@@ -40,7 +41,9 @@ function mensagemErro(exercicio, erros) {
   return MENSAGEM_ERRO_SIMPLES
 }
 
-export default function Jogo({ trilha, aoVoltar }) {
+// roteiroFinal (opcional): quadrinho de fechamento tocado ao concluir a trilha,
+// antes da tela de conclusao (so a Trilha 1 tem, por enquanto). Vem do App.jsx.
+export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
   const [indice, setIndice] = useState(0)
   const [indiceAnterior, setIndiceAnterior] = useState(0)
   const [resposta, setResposta] = useState(() => respostaInicial(trilha.exercicios[0]))
@@ -58,6 +61,8 @@ export default function Jogo({ trilha, aoVoltar }) {
   const [xpTotal, setXpTotal] = useState(0)
 
   const [finalizado, setFinalizado] = useState(false)
+  // Se ja viu o quadrinho de fechamento da trilha (quando houver roteiroFinal).
+  const [viuFinal, setViuFinal] = useState(false)
 
   const exercicio = trilha.exercicios[indice]
   const total = trilha.exercicios.length
@@ -131,11 +136,17 @@ export default function Jogo({ trilha, aoVoltar }) {
     setStreak(0)
     setXpTotal(0)
     setFinalizado(false)
+    setViuFinal(false)
   }
 
   // Escolha da tela (a interrupcao por falta de energia vem primeiro).
   if (vidas <= 0) {
     return <TelaLicaoInterrompida xpTotal={xpTotal} aoRecomecar={aoRecomecar} aoVoltar={aoVoltar} />
+  }
+  // Ao concluir a trilha, se houver um quadrinho de fechamento ainda nao visto,
+  // mostra ele antes da tela de conclusao.
+  if (finalizado && roteiroFinal && !viuFinal) {
+    return <Quadrinho roteiro={roteiroFinal} aoFinalizar={() => setViuFinal(true)} />
   }
   if (finalizado) {
     return (

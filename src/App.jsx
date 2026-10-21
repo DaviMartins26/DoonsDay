@@ -21,11 +21,17 @@ import TelaCatalogo from './jogo/telas/TelaCatalogo.jsx'
 import Quadrinho from './quadrinhos/Quadrinho.jsx'
 import abertura from './quadrinhos/abertura.js'
 import trilha1Intro from './quadrinhos/trilha1-intro.js'
+import trilha1Final from './quadrinhos/trilha1-final.js'
 import { bloco, trilhas } from './trilhas/index.js'
 
-// Intro de quadrinho por trilha (trilhaId -> roteiro).
+// Intro de quadrinho por trilha (trilhaId -> roteiro), tocada ao "Comecar".
 const INTROS = {
   leitura: trilha1Intro,
+}
+
+// Fechamento por trilha (trilhaId -> roteiro), tocado ao concluir a trilha.
+const FINAIS = {
+  leitura: trilha1Final,
 }
 
 export default function App() {
@@ -55,6 +61,13 @@ export default function App() {
     )
   }
 
-  // 4) Jogo da trilha escolhida.
-  return <Jogo key={trilha.id} trilha={trilha} aoVoltar={() => setTrilhaId(null)} />
+  // 4) Jogo da trilha escolhida (com o quadrinho de fechamento, se houver).
+  return (
+    <Jogo
+      key={trilha.id}
+      trilha={trilha}
+      roteiroFinal={FINAIS[trilha.id] || null}
+      aoVoltar={() => setTrilhaId(null)}
+    />
+  )
 }
