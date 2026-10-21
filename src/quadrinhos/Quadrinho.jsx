@@ -18,7 +18,17 @@ import { useState } from 'react'
 // Rotulo exibido antes da fala, por personagem.
 const QUEM = { lari: 'Lari', nos: 'Nos', rival: 'Rival', chef: 'Chefe' }
 
-export default function Quadrinho({ roteiro, aoFinalizar, idiomaInicial = 'pt' }) {
+// Substitui marcadores {chave} na fala pelos valores de `variaveis`.
+// Ex.: texto "Voce fez {xp} pontos" + { xp: 1160 } -> "Voce fez 1160 pontos".
+// Marcador sem valor correspondente fica como esta (nao quebra as outras falas).
+function aplicarVariaveis(texto, variaveis) {
+  return String(texto).replace(/\{(\w+)\}/g, (marcador, chave) =>
+    chave in variaveis ? variaveis[chave] : marcador,
+  )
+}
+
+// variaveis (opcional): valores injetados nas falas via {chave} (ex.: { xp }).
+export default function Quadrinho({ roteiro, aoFinalizar, idiomaInicial = 'pt', variaveis = {} }) {
   const [indice, setIndice] = useState(0)
   const [idioma, setIdioma] = useState(idiomaInicial)
 
@@ -64,7 +74,8 @@ export default function Quadrinho({ roteiro, aoFinalizar, idiomaInicial = 'pt' }
             className="quadrinho-balao"
             style={{ left: `${balao.x}%`, top: `${balao.y}%`, width: `${balao.w}%` }}
           >
-            <strong>{QUEM[balao.quem] || balao.quem}:</strong> {balao.texto[idioma]}
+            <strong>{QUEM[balao.quem] || balao.quem}:</strong>{' '}
+            {aplicarVariaveis(balao.texto[idioma], variaveis)}
           </div>
         ))}
       </div>

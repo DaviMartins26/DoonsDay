@@ -446,11 +446,13 @@ só nas trilhas-marco. Foco do MVP: **abertura + trilha 1, 1º exercício**.
   inteiro amarelo. Regerar usando a concept art da Lari como referência de cor.
 - Revisar consistência geral de traço/cor entre os 6 quadros.
 - Polir o encaixe texto↔balão no componente (caixa transparente + auto-fit).
-- **Fechamento da trilha 1 (Fim5/Fim7):** aparece uma figura de **cabelo laranja
-  com cara humana** à esquerda (glitch do Gemini) — deveria ser a Lari (robô) ou
-  ninguém. Regerar. (Fim7 é quase igual a Fim5; é reserva, não usado.)
 - **Fim6:** o Rival (verde) aparece com uma **lâmpada** no topo (traço da Lari);
   o Rival não deve ter lâmpada. Regerar.
+
+**Resolvido:** a ordem dos `Fim*.jpeg` foi corrigida para seguir a história
+(Fim1..Fim7 = beats 1..7); o glitch da figura humana de cabelo laranja (antigo
+Fim5) saiu. A pontuação exibida no desfecho é a **real do jogador** (`{xp}`
+injetado pelo motor, vindo do `Jogo.jsx`), não mais um número fixo.
 
 ## 8. Próximos passos
 

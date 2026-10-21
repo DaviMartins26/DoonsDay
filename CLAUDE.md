@@ -327,3 +327,10 @@ Monetização está fora de escopo (definição do TCC).
   `TelaConclusao`; `App.jsx` tem o mapa `FINAIS` (trilhaId→roteiro). Fluxo
   verificado no navegador até a conclusão. Pendências de arte (glitches do Gemini)
   anotadas no `LORE.md`.
+- **2026-10-21:** Correções no desfecho da Trilha 1: ordem das imagens ajustada
+  (`Fim1..Fim7` = beats 1..7; Fim1 = condecoração, Fim5 = Chefe decide com 1
+  balão, Fim7 = desfecho da Lari; glitch da figura humana removido). O motor
+  `Quadrinho.jsx` agora substitui marcadores `{chave}` nas falas por `variaveis`
+  (ex.: `{xp}`), e o `Jogo.jsx` injeta `{ xp: xpTotal }` no quadrinho final — a
+  fala da condecoração mostra a **pontuação real do jogador** (verificado: 110 XP
+  após acertar o ex1 e pular o resto), não mais um valor fixo.

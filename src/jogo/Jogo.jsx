@@ -146,7 +146,13 @@ export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
   // Ao concluir a trilha, se houver um quadrinho de fechamento ainda nao visto,
   // mostra ele antes da tela de conclusao.
   if (finalizado && roteiroFinal && !viuFinal) {
-    return <Quadrinho roteiro={roteiroFinal} aoFinalizar={() => setViuFinal(true)} />
+    return (
+      <Quadrinho
+        roteiro={roteiroFinal}
+        variaveis={{ xp: xpTotal }}
+        aoFinalizar={() => setViuFinal(true)}
+      />
+    )
   }
   if (finalizado) {
     return (
