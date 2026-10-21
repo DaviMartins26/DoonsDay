@@ -308,3 +308,11 @@ Monetização está fora de escopo (definição do TCC).
   pisca/lâmpada(dica), Q5 Chefe na sombra, Q6 Lari acena. Verificado quadro a
   quadro no navegador. Pendência de polimento (anotada): encaixe do texto no balão
   não é perfeito — ok como protótipo, melhorar depois (ex.: caixa transparente).
+- **2026-10-21:** Intro em quadrinho da **Trilha 1** (`src/quadrinhos/trilha1-intro.js`,
+  3 quadros: Lari apresenta a trilha, o desafio de ler/prever a saída, e o Rival
+  verde debochando). Artes em `lore/Trilha1/` → `public/quadrinhos/trilha1/Inicio1-3.jpeg`.
+  `App.jsx` agora tem um mapa `INTROS` (trilhaId→roteiro); a intro toca ao clicar
+  "Começar" na trilha, antes do 1º exercício, uma vez por sessão (`introsVistas`).
+  Só a Trilha 1 (`leitura`) tem intro. Fluxo verificado no navegador: abertura →
+  catálogo → Começar → intro (3 quadros) → Exercício 1. O **final** da trilha 1
+  (ciclo dramático) ainda não foi scriptado nem gerado.
