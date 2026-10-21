@@ -341,6 +341,91 @@ só volta no fechamento da trilha (ciclo dramático), que fica para depois do MV
 
 *Rascunho; revisar o texto com a equipe antes de gerar a arte.*
 
+### Fechamento da trilha 1 (ciclo dramático) — roteiro + prompts
+
+Toca **ao concluir a trilha 1** (depois do 8º exercício, na tela de conclusão).
+É o primeiro fechamento da lore, então usa **mais de 3 quadros** (7). Base: o
+ciclo dramático da seção 3 (vitória → Rival → Chefe → virada motivacional).
+
+**Número-chave:** o **teto honesto de XP da trilha 1 é 1160** (8 exercícios, sem
+erros, streak 1→8: cada acerto = `XP_BASE` 100 + `XP_BONUS_POR_STREAK` 10 ×
+streak; total = 800 + 10×(1+…+8) = 800 + 360 = 1160). O Rival aparece com
+**1500**, acima do máximo possível — a prova de que trapaceou. (Se os parâmetros
+de `config.js` mudarem, recalcular esses dois números.)
+
+Falas em PT (EN é só tradução das strings). `[Nós]` = jogador (azul).
+
+1. **Condecoração.** Jogador no pódio sob holofote; medalha brilhante; o Chefe na
+   sombra (só mão e visor vermelhos).
+   `[Chefe]` "Impressionante. 1160 pontos: a pontuacao perfeita. Um verdadeiro
+   prodigio."
+2. **Orgulho.** Jogador feliz; Lari ao lado aplaudindo.
+   `[Nós]` "Eu consegui... a pontuacao perfeita!"
+3. **O Rival irrompe.** Rival (verde) entra com sorriso debochado.
+   `[Rival]` "Perfeita? Que fofo. Eu fiz 1500."
+4. **Placar impossível.** Close no placar: 1500 (verde) e, menor, "MAX 1160"
+   (azul). Jogador aponta, incrédulo.
+   `[Nós]` "1500? Impossivel. O maximo da trilha e 1160!"
+5. **O Chefe decide.** O Chefe vira para o Rival; a medalha é redirecionada.
+   `[Chefe]` "1500 e maior que 1160. Maior e Maior. A condecoracao e dele."
+6. **Deboche.** O Rival exibe a medalha e pisca zombando; jogador indignado.
+   `[Rival]` "Numeros sao numeros. Boa sorte na proxima, prodigio."
+7. **Virada (Lari).** Corredor; jogador cabisbaixo saindo; Lari alcança e põe a
+   mão no ombro.
+   `[Lari]` "Nao foi justo, eu sei. Mas voce fez o maximo possivel, de verdade.
+   Ainda temos muito a aprender - e vamos superar aquele trapaceiro. Juntos."
+
+#### Prompts do Gemini (gerar com a concept art como referência de estilo/cor)
+
+Cores fixas: herói = corpo branco + **azul**; Rival = mesmo modelo + **verde**;
+Chefe = robô grande blindado, escuro, só partes, **vermelho**; Lari = branco +
+**âmbar** + lâmpada. **Sempre** incluir *"empty white speech balloon with no
+text"* e deixar espaço para o balão.
+
+> **F1 — Condecoração:** `Award ceremony in the DevForge lab. The hero robot
+> (white body, blue glowing accents) stands on a small podium under a spotlight,
+> a glowing golden medal floating toward it. The Boss looms in shadow — only a
+> huge red-accented hand and a glowing red visor visible, never fully shown.
+> Empty white speech balloon near the Boss, no text. Clean modern kids-comic
+> style, flat colors, celebratory yet slightly ominous lighting.`
+
+> **F2 — Orgulho:** `The hero robot (white, blue accents) looking proud and
+> happy; Lari (white robot, amber accents, lightbulb antenna) beside it cheering
+> and clapping, confetti in the air. DevForge lab. Empty white speech balloon
+> above the hero, no text. Clean kids-comic style, warm lighting.`
+
+> **F3 — Rival irrompe:** `The Rival robot — identical model to the hero but with
+> GREEN glowing accents — bursts in with a smug grin, arms crossed. The hero
+> (blue accents) looks surprised. DevForge lab. Empty white speech balloon near
+> the Rival, no text. Clean kids-comic style, flat colors.`
+
+> **F4 — Placar impossível:** `Close-up of a holographic scoreboard showing a big
+> green glowing "1500" and, smaller below, a blue "MAX 1160". The hero robot
+> (blue accents) points at it, visor showing disbelief. DevForge lab background.
+> Empty white speech balloon at the top, no text. Clean kids-comic style.`
+
+> **F5 — O Chefe decide:** `The Boss (shadowed, only a glowing red visor and a
+> huge red-accented hand visible) turns toward the Rival (green accents); the
+> glowing golden medal redirects to the Rival. The hero (blue accents) in the
+> foreground, dismayed. Dramatic low-key lighting, mildly sinister but
+> kid-friendly. Empty white speech balloon near the Boss, no text. Clean
+> kids-comic style.`
+
+> **F6 — Deboche:** `The Rival robot (green accents) proudly holds the glowing
+> golden medal and winks mockingly at the hero. The hero robot (blue accents)
+> stands with a shocked, indignant expression. DevForge lab. Empty white speech
+> balloon near the Rival, no text. Clean kids-comic style.`
+
+> **F7 — Virada (Lari):** `A quieter moment in a DevForge corridor: the hero
+> robot (blue accents) looks down, dejected, walking out; Lari (white robot,
+> amber accents, lightbulb antenna) catches up and places a reassuring hand on
+> its shoulder, warm encouraging expression. Softer lighting. Empty white speech
+> balloon near Lari, no text. Clean kids-comic style.`
+
+Quando as artes existirem: criar `src/quadrinhos/trilha1-final.js` (mesmo formato)
+e dispará-lo na **tela de conclusão** da trilha 1 (hoje `TelaConclusao`), com os
+mesmos botões (Pular, PT/EN) e, ao fim, um "Proxima trilha".
+
 ## 7. Perguntas em aberto
 
 - **Nome definitivo da Guia** (provisório: **Lari**) e referência visual.

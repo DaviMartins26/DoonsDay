@@ -55,10 +55,10 @@ export default {
     {
       id: 'q3',
       imagem: '/quadrinhos/intro/Quadro3.jpeg',
-      descricao: 'Lari aponta para um painel de ENERGY (baterias, medidor).',
+      descricao: 'Lari aponta para um painel de System Health / energia (medidor 98.5%).',
       baloes: [
         {
-          quem: 'lari', x: 15, y: 10, w: 32,
+          quem: 'lari', x: 11, y: 11, w: 27,
           texto: {
             pt: 'Voce comeca com energia. Errar demais esgota ela - calma e capricho valem mais que pressa.',
             en: 'You start with energy. Too many mistakes drain it - care beats rushing.',
