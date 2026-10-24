@@ -3,20 +3,22 @@
 export default function TelaLicaoInterrompida({ xpTotal, aoRecomecar, aoVoltar }) {
   return (
     <main>
-      <h1>DevForge</h1>
-      <h2>Licao interrompida</h2>
-      <p>Voce ficou sem energia.</p>
-      <p>XP acumulado: {xpTotal}</p>
-      <p>
-        <button type="button" onClick={aoRecomecar}>
-          Recomecar
-        </button>{' '}
-        {aoVoltar && (
-          <button type="button" onClick={aoVoltar}>
-            Voltar ao catalogo
+      <div className="df-cartao">
+        <h1>DevForge</h1>
+        <h2>Licao interrompida</h2>
+        <p>Voce ficou sem energia.</p>
+        <p>XP acumulado: {xpTotal}</p>
+        <div className="df-acoes">
+          <button type="button" className="df-primario" onClick={aoRecomecar}>
+            Recomecar
           </button>
-        )}
-      </p>
+          {aoVoltar && (
+            <button type="button" onClick={aoVoltar}>
+              Voltar ao catalogo
+            </button>
+          )}
+        </div>
+      </div>
     </main>
   )
 }

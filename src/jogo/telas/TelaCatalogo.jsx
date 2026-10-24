@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------------
 // Lista as trilhas do bloco de Logica de Programacao para o usuario escolher
 // qual jogar. Tela "burra": recebe o bloco, as trilhas e o callback aoEscolher.
+// Estilo no tema DevForge (classes em styles.css).
 // ============================================================================
 
 export default function TelaCatalogo({ bloco, trilhas, aoEscolher }) {
@@ -12,20 +13,15 @@ export default function TelaCatalogo({ bloco, trilhas, aoEscolher }) {
       <h2>{bloco.titulo}</h2>
       <p>{bloco.descricao}</p>
 
-      <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
+      <ul className="cat-lista">
         {trilhas.map((trilha, i) => (
-          <li
-            key={trilha.id}
-            style={{ border: '1px solid #ccc', borderRadius: 6, padding: '0.75rem', marginBottom: '0.75rem' }}
-          >
-            <p style={{ margin: '0 0 0.25rem' }}>
-              <strong>
-                {i + 1}. {trilha.titulo}
-              </strong>{' '}
+          <li key={trilha.id} className="cat-card">
+            <h3>
+              {i + 1}. {trilha.titulo}{' '}
               <small>({trilha.exercicios.length} exercicios)</small>
-            </p>
-            <p style={{ margin: '0 0 0.5rem' }}>{trilha.descricao}</p>
-            <button type="button" onClick={() => aoEscolher(trilha.id)}>
+            </h3>
+            <p>{trilha.descricao}</p>
+            <button type="button" className="df-primario" onClick={() => aoEscolher(trilha.id)}>
               Comecar
             </button>
           </li>

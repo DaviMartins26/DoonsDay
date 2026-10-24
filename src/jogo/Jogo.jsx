@@ -23,7 +23,8 @@ import {
   ERROS_PARA_RESPOSTA,
   MENSAGEM_ERRO_SIMPLES,
 } from '../config.js'
-import TelaExercicio from './telas/TelaExercicio.jsx'
+import TelaExercicio from './telas/TelaExercicio.jsx' // tela classica (reserva)
+import TelaChat from './telas/TelaChat.jsx' // PROTOTIPO: resolver como conversa com a Lari
 import TelaLicaoInterrompida from './telas/TelaLicaoInterrompida.jsx'
 import TelaConclusao from './telas/TelaConclusao.jsx'
 import Quadrinho from '../quadrinhos/Quadrinho.jsx'
@@ -159,8 +160,10 @@ export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
       <TelaConclusao xpTotal={xpTotal} vidas={vidas} aoRecomecar={aoRecomecar} aoVoltar={aoVoltar} />
     )
   }
+  // PROTOTIPO: usando TelaChat (conversa com a Lari) no lugar da TelaExercicio.
+  // Para voltar a tela classica, troque <TelaChat por <TelaExercicio.
   return (
-    <TelaExercicio
+    <TelaChat
       trilhaTitulo={trilha.titulo}
       vidas={vidas}
       streak={streak}

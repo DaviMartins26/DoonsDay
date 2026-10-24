@@ -2,20 +2,22 @@
 export default function TelaConclusao({ xpTotal, vidas, aoRecomecar, aoVoltar }) {
   return (
     <main>
-      <h1>DevForge</h1>
-      <h2>Trilha concluida!</h2>
-      <p>XP total: {xpTotal}</p>
-      <p>Energia restante: {vidas}</p>
-      <p>
-        <button type="button" onClick={aoRecomecar}>
-          Recomecar
-        </button>{' '}
-        {aoVoltar && (
-          <button type="button" onClick={aoVoltar}>
-            Voltar ao catalogo
+      <div className="df-cartao">
+        <h1>DevForge</h1>
+        <h2>Trilha concluida!</h2>
+        <p>XP total: {xpTotal}</p>
+        <p>Energia restante: {vidas}</p>
+        <div className="df-acoes">
+          <button type="button" className="df-primario" onClick={aoRecomecar}>
+            Recomecar
           </button>
-        )}
-      </p>
+          {aoVoltar && (
+            <button type="button" onClick={aoVoltar}>
+              Voltar ao catalogo
+            </button>
+          )}
+        </div>
+      </div>
     </main>
   )
 }

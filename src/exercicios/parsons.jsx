@@ -1,5 +1,5 @@
 // ============================================================================
-// Tipo de exercicio: PARSONS (reordenar linhas)
+// Tipo de exercicio: PARSONS (reordenar linhas) - ARRASTAR
 // ----------------------------------------------------------------------------
 // Dados esperados:
 //   - linhas  : ordem embaralhada inicial (array de strings);
@@ -9,10 +9,13 @@
 // A resposta do usuario e um ARRAY com as linhas na ordem atual; vale se bater
 // com qualquer uma das ordens aceitas.
 //
-// A indentacao (espacos no inicio da linha) e PRESERVADA na tela (whiteSpace:
-// 'pre'), para o codigo parecer codigo de verdade e o usuario perceber a
-// estrutura (o que fica "dentro" do if/for aparece com recuo).
+// Interacao: o usuario ARRASTA a "caixa" da linha (segurando com o mouse ou o
+// dedo) para cima/baixo - a lista reordena ao vivo. Pointer events cobrem mouse
+// e toque; nenhuma dependencia externa. A indentacao e preservada (white-space:
+// pre) para o codigo parecer codigo.
 // ============================================================================
+
+import { useRef, useState } from 'react'
 
 function ordensAceitas(exercicio) {
   if (Array.isArray(exercicio.corretas)) return exercicio.corretas
@@ -20,36 +23,61 @@ function ordensAceitas(exercicio) {
 }
 
 function Campo({ resposta, setResposta, travado }) {
-  // Durante a troca de exercicio a resposta pode nao ser array por um instante;
-  // este fallback evita erro ao desenhar.
+  // Durante a troca de exercicio a resposta pode nao ser array por um instante.
   const linhas = Array.isArray(resposta) ? resposta : []
+  const listaRef = useRef(null)
+  const [arrastando, setArrastando] = useState(null) // indice sendo arrastado
 
-  // Move a linha da posicao i em "delta" (-1 sobe, +1 desce).
-  function mover(i, delta) {
-    const destino = i + delta
-    if (destino < 0 || destino >= linhas.length) return
-    const copia = [...linhas]
-    const [linha] = copia.splice(i, 1)
-    copia.splice(destino, 0, linha)
-    setResposta(copia)
+  // Indice do item sob a posicao vertical do cursor (pelo meio de cada item).
+  function indiceSob(clientY) {
+    const itens = listaRef.current ? listaRef.current.querySelectorAll('[data-linha]') : []
+    for (let j = 0; j < itens.length; j++) {
+      const r = itens[j].getBoundingClientRect()
+      if (clientY < r.top + r.height / 2) return j
+    }
+    return itens.length - 1
+  }
+
+  function aoDescer(i) {
+    if (travado) return
+    setArrastando(i)
+  }
+
+  function aoMover(e) {
+    if (arrastando === null) return
+    const alvo = indiceSob(e.clientY)
+    if (alvo >= 0 && alvo !== arrastando) {
+      const copia = [...linhas]
+      const [linha] = copia.splice(arrastando, 1)
+      copia.splice(alvo, 0, linha)
+      setResposta(copia)
+      setArrastando(alvo)
+    }
+  }
+
+  function aoSoltar() {
+    setArrastando(null)
   }
 
   return (
-    <ol>
+    <ol
+      ref={listaRef}
+      className="parsons-lista"
+      onPointerMove={aoMover}
+      onPointerUp={aoSoltar}
+      onPointerLeave={aoSoltar}
+    >
       {linhas.map((linha, i) => (
-        <li key={i} style={{ fontFamily: 'monospace' }}>
-          {/* whiteSpace: 'pre' mantem os espacos de indentacao visiveis */}
-          <code style={{ whiteSpace: 'pre' }}>{linha === '' ? ' ' : linha}</code>{' '}
-          <button type="button" onClick={() => mover(i, -1)} disabled={travado || i === 0}>
-            subir
-          </button>{' '}
-          <button
-            type="button"
-            onClick={() => mover(i, 1)}
-            disabled={travado || i === linhas.length - 1}
-          >
-            descer
-          </button>
+        <li
+          key={i}
+          data-linha
+          className={'parsons-item' + (arrastando === i ? ' parsons-arrastando' : '')}
+          onPointerDown={() => aoDescer(i)}
+        >
+          <span className="parsons-grip" aria-hidden="true">
+            ⠿
+          </span>
+          <code>{linha === '' ? ' ' : linha}</code>
         </li>
       ))}
     </ol>
