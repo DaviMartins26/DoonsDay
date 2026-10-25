@@ -438,3 +438,14 @@ Monetização está fora de escopo (definição do TCC).
   → nota → nossa resposta por linha → uma mensagem rica da Lari). 440 testes passando.
   `METODOLOGIA-EXERCICIOS.md` (nova seção "Camada de apresentação: chat com a Lari" + tabela
   de mecânicas + correção do `lei8`) e `LORE.md` atualizados. Commit + push desta rodada.
+- **2026-10-25:** Documento da Entrega II atualizado para a direção de jogo: gerado
+  `Documento/DevForge_entrega-II_V1.2.docx` (base `Artigos/DevForge-5.4.3.docx`, mesma do
+  v1.1). A seção **3.3 Especificação da Solução** ganhou o trecho **"Apresentação em forma
+  de jogo"** descrevendo a camada de chat com a Lari (conversa, mini-aula tangencial por
+  trilha, nota por exercício, feedback conversacional com dica negociada e resposta por
+  linha, minijogos de arrastar — Parsons e fios — tema visual DevForge e layout responsivo),
+  deixando claro que a **pedagogia não mudou, só a apresentação**. Também: Tecnologias com
+  React Testing Library/jsdom e tema visual próprio; um objetivo novo sobre a experiência
+  com cara de jogo; e no **Cap. 4 (4.3)** o "Uso do jogo" passou a descrever a conversa com
+  a Lari ao longo da Trilha 1 (8 exercícios) com mini-aulas. Cap. 5 segue só renumerado.
+  Validado por XSD. Enviado para análise do Davi. **Nada commitado no Git.**

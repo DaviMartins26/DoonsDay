@@ -32,10 +32,10 @@ resultados de aprendizagem do Capítulo 3.3 quanto o conteúdo do MVP. Precisa d
 validação da orientadora (tempo externo), então começa cedo para caber o
 vai-e-volta.
 
-- [ ] Definir a metodologia de ensino da 1ª trilha (lógica de programação)
-- [ ] Basear o conteúdo na matéria do 1º período do curso
-- [ ] Mapear cada exercício a um resultado de aprendizagem (alimenta o 3.3)
-- [ ] Definir a mecânica de jogo associada a cada resultado
+- [x] Definir a metodologia de ensino da 1ª trilha (lógica de programação)
+- [x] Basear o conteúdo na matéria do 1º período do curso
+- [x] Mapear cada exercício a um resultado de aprendizagem (alimenta o 3.3)
+- [x] Definir a mecânica de jogo associada a cada resultado
 - [ ] Validar a metodologia com a orientadora
 
 ## 2. Consolidar história (texto) 🔓
@@ -44,10 +44,10 @@ vai-e-volta.
 Destrava o campo "História do Jogo" do Capítulo 3.3 e a integração da narrativa
 no protótipo. As imagens entram depois (front 6).
 
-- [ ] Escrever o roteiro / storyboard em texto (quadro a quadro)
-- [ ] Definir o elenco: protagonista (robô/IA), rival (trapaceiro), chefe/vilão
+- [x] Escrever o roteiro / storyboard em texto (quadro a quadro)
+- [x] Definir o elenco: protagonista (robô/IA), rival (trapaceiro), chefe/vilão
       (olhos cartunescos, nunca mostrado por inteiro), figurantes
-- [ ] Definir os pontos de injeção da história: abertura no login, 3 quadros no
+- [x] Definir os pontos de injeção da história: abertura no login, 3 quadros no
       início da trilha, 1–2 no meio, 3 no fim (cerimônia + rival trapaceia +
       vilão ignorante "maior é maior" + volta para o escritório)
 - [ ] Amarrar cada arco da lore a um resultado de aprendizagem da trilha
@@ -82,14 +82,15 @@ Filosofia atual: fazer funcionar primeiro, embelezar depois.
 - [x] Mecânica de XP (com bônus de streak)
 - [x] Dicas progressivas ao errar
 - [x] Só avança ao acertar; telas de lição interrompida e conclusão
-- [ ] Revisar/consolidar os 7 tipos à luz da metodologia (front 1)
-- [ ] Renomear "vida" para "energia" (coerência com o robô da lore) no
+- [x] Revisar/consolidar os 7 tipos à luz da metodologia (front 1)
+- [x] Renomear "vida" para "energia" (coerência com o robô da lore) no
       `config.js` e nas telas
-- [ ] Decidir e implementar a regra: **pedir dica consome energia?**
-- [ ] Alinhar à regra final do TCC: 10 de energia, perda só após o 3º erro
+- [x] Decidir e implementar a regra: **pedir dica consome energia?**
+- [x] Alinhar à regra final do TCC: 10 de energia, perda só após o 3º erro
       (RF07/RF08) e dicas a partir do 3º erro (RF06/RF09)
-- [ ] Integrar a história ao protótipo (depende do front 2)
-- [ ] Manter apenas o CSS mínimo de leitura (embelezar fica para o futuro)
+- [x] Integrar a história ao protótipo (depende do front 2) — trilha 1 (abertura,
+      intro e fechamento); demais trilhas pós-MVP
+- [x] Manter apenas o CSS mínimo de leitura (embelezar fica para o futuro)
 
 ## 5. IA em stub + conta de API ⛓️👥
 
@@ -97,7 +98,7 @@ Filosofia atual: fazer funcionar primeiro, embelezar depois.
 stub local (regra fixa) já funciona hoje e permite desenvolver o fluxo sem gastar
 tokens. A chave da API nunca vai no front-end — fica num backend.
 
-- [ ] Manter o feedback em stub local enquanto desenvolve
+- [x] Manter o feedback em stub local enquanto desenvolve
 - [ ] Escolher a IA e a arquitetura (API de nuvem; backend esconde a chave)
 - [ ] Desenvolver o backend mínimo (Node/serverless): recebe resposta/código +
       rubrica, chama a API, devolve o feedback
@@ -112,9 +113,10 @@ tokens. A chave da API nunca vai no front-end — fica num backend.
 **Por que por último / em paralelo:** dependem de terceiros ou não têm urgência
 de prazo. Correm ao lado dos demais fronts.
 
-- [ ] Imagens da lore via Gemini (depende da base de design do amigo designer)
-- [ ] Componente de quadrinho dinâmico (imagem + efeito no clique + próximo quadro)
-- [ ] Botão "pular história", presente em todos os momentos
+- [x] Imagens da lore via Gemini (abertura, intro e fechamento da trilha 1;
+      pendências de arte anotadas no LORE.md)
+- [x] Componente de quadrinho dinâmico (imagem + camada de texto + navegação + Pular + PT/EN)
+- [x] Botão "pular história", presente em todos os momentos
 - [ ] Exercício de Git ao fim da trilha: usuário sobe no GitHub e a IA avalia o
       código do repositório (depende do backend do front 5)
 - [ ] POC do Firebase (login + salvar XP de um usuário) — diferencial importante,
