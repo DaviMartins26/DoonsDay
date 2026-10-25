@@ -11,11 +11,18 @@ export default {
   id: 'projetofinal',
   titulo: 'Projeto Final (GitHub + IA)',
   descricao: 'Fechamento da jornada: resolver um problema real e receber feedback da IA.',
+  // Mini-aula (cápsula): a Lari conecta o conhecido -> introduz o novo -> micro-exemplo.
+  aula: [
+    'Voce passou por leitura, tipos, contas, decisoes, repeticao, listas, funcoes e boas praticas.',
+    'Agora e hora de juntar tudo num problema de verdade: resolver em Python, subir no GitHub e receber feedback da IA.',
+    'A IA aponta o caminho sem entregar a resposta pronta - quem decide e voce. Bora fechar a jornada!',
+  ],
   exercicios: [
     {
       id: 'pf1',
       tipo: 'multipla',
       titulo: 'Como funciona o projeto final',
+      nota: 'Aqui a IA e um apoio ao raciocinio: ela aponta o caminho, mas quem resolve e decide e voce.',
       enunciado: 'No projeto final voce resolve um problema em Python, sobe no GitHub e a IA avalia o codigo. O que a IA NAO deve fazer?',
       opcoes: ['Explicar por que algo esta errado', 'Entregar a solucao pronta no seu lugar', 'Apontar o que revisar', 'Verificar se ha funcoes e organizacao'],
       correta: 1,

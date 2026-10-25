@@ -82,13 +82,15 @@ function Campo({ exercicio, resposta, setResposta }) {
   }
 
   return (
-    <div
-      ref={contRef}
-      className="fios"
-      onPointerMove={aoMover}
-      onPointerUp={aoSoltar}
-      onPointerCancel={() => setArrasto(null)}
-    >
+    <>
+      <p className="fios-dica">Arraste um fio de cada item da esquerda ate a resposta certa.</p>
+      <div
+        ref={contRef}
+        className="fios"
+        onPointerMove={aoMover}
+        onPointerUp={aoSoltar}
+        onPointerCancel={() => setArrasto(null)}
+      >
       <svg className="fios-svg">
         {atual.map((v, i) =>
           v && coords.esq[i] && coords.dir[v] ? (
@@ -139,7 +141,8 @@ function Campo({ exercicio, resposta, setResposta }) {
           </div>
         ))}
       </div>
-    </div>
+      </div>
+    </>
   )
 }
 

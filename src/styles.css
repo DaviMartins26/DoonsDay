@@ -333,9 +333,25 @@ pre {
 }
 .chat-msg-lari {
   justify-content: flex-start;
+  align-items: flex-end;
+  gap: 8px;
 }
 .chat-msg-nos {
   justify-content: flex-end;
+}
+/* Rosto de quem falou (so para personagens; o jogador "nos" nao tem). */
+.chat-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  object-fit: cover;
+  background: #0c1726;
+  border: 1px solid rgba(53, 214, 232, 0.45);
+  align-self: flex-end;
+}
+.chat-bolha-txt {
+  white-space: pre-line; /* respeita quebras de linha (\n) no texto da bolha */
 }
 .chat-bolha {
   max-width: 82%;
@@ -623,4 +639,82 @@ pre {
 .fio-arrasto {
   stroke: var(--amber);
   stroke-dasharray: 6 5;
+}
+.fios-dica {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Responsivo (celular). No chat, o painel vira tela cheia (estilo app de
+   mensagens); catalogo e quadrinho encolhem o espacamento.
+   ========================================================================== */
+@media (max-width: 560px) {
+  main {
+    padding: 18px 12px;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Chat ocupa a tela inteira, sem moldura arredondada. */
+  .chat-tela {
+    padding: 0;
+  }
+  .chat-painel {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  .chat-inner {
+    border-radius: 0;
+  }
+  .chat-top {
+    padding: 8px 10px;
+  }
+  .chat-top-titulo strong {
+    font-size: 0.85rem;
+  }
+  .chat-hud {
+    gap: 5px;
+    font-size: 0.72rem;
+  }
+  .chat-hud span {
+    padding: 2px 6px;
+  }
+  .chat-log {
+    padding: 12px;
+  }
+  .chat-bolha {
+    max-width: 86%;
+    font-size: 0.9rem;
+  }
+  .chat-avatar {
+    width: 30px;
+    height: 30px;
+  }
+  .chat-dock {
+    padding: 10px;
+  }
+  .chat-campo {
+    max-height: 40vh;
+  }
+
+  /* Minigame dos fios: aproxima as colunas e reduz o rotulo. */
+  .fios {
+    gap: 14px;
+  }
+  .fios-rotulo {
+    font-size: 0.78rem;
+    padding: 2px 5px;
+  }
+
+  /* Quadrinho da lore com menos margem no celular. */
+  .quadrinho {
+    margin: 1rem auto;
+  }
 }

@@ -454,6 +454,38 @@ só nas trilhas-marco. Foco do MVP: **abertura + trilha 1, 1º exercício**.
 Fim5) saiu. A pontuação exibida no desfecho é a **real do jogador** (`{xp}`
 injetado pelo motor, vindo do `Jogo.jsx`), não mais um número fixo.
 
+## Chat da Lari (gameplay como conversa) — 2026-10-25
+
+Para amarrar história e gameplay (feedback do orientador de "parecer mais um
+jogo"), a resolução dos exercícios agora acontece num **chat com a Lari**: ela
+manda o exercício como mensagem, o jogador responde, ela "digita" e responde
+certo/errado; acertando, manda o próximo. A **dica** é negociada na conversa
+(custa 1 de energia) e há **aviso quando um erro gasta energia**. Cada mensagem
+mostra o **rosto de quem falou**, variando por humor — **normal**, **tirando
+dúvida** (dica) e **resposta errada** (artes em `lore/Lari/`). O rosto do jogador
+não aparece. O modelo já permite **outro personagem** (Rival, Chefe) mandar
+mensagens numa trilha futura — basta cadastrar os rostos dele. Fundo do chat:
+`lore/Chat/fundo.jfif` (laboratório DevForge). Vale para **todas as trilhas**.
+Minigames ganharam cara de jogo: Parsons reordena **arrastando** e a associação
+virou **"fios"** (ligar pergunta à resposta).
+
+No começo de cada trilha a Lari dá uma **mini-aula (cápsula)**: duas ou três
+frases que explicam *um pouco* o conceito, de forma tangencial (liga o que o
+aluno já sabe → introduz o novo → micro-exemplo), sem virar uma aula cheia. Cada
+uma segue o conteúdo da disciplina de origem mapeado em `METODOLOGIA-EXERCICIOS.md`
+(Raciocínio Algorítmico). Já vale para **todas as trilhas**. Quando a mesma conta
+tem mais de uma saída, a Lari também mostra o **gabarito quebrado por linha** (uma
+saída por linha), para a resposta dela ler igual à do jogador.
+
+Nos **fios** (associação), a coluna da direita vem embaralhada, então os fios certos
+se **cruzam** (não é mais ligar reto, 1-a-1) — fica menos óbvio. E, por exercício, a
+Lari manda uma **mini-explicação** curta logo depois do desafio (campo `nota`): se o
+conteúdo é novo, ela adianta de leve; se já apareceu, reforça. Quando faz sentido, a
+resposta dela vem como **uma mensagem só**, uma linha por saída já nomeando a conta
+(ex.: "Saida 1 é Subtração, então: 4 − 10 = −6") — campo `gabarito` do exercício.
+Essa camada (cápsula, nota, resposta por linha, fios que cruzam) já vale para **todas
+as 10 trilhas**.
+
 ## 8. Próximos passos
 
 1. Fechar as perguntas em aberto com a equipe (nome da Lari, formato de dados).

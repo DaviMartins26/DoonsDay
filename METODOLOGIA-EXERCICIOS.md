@@ -108,6 +108,11 @@ a 10ª é o projeto final). Princípios aplicados (detalhados em
 | XP e streak | XP por acerto (base − erros + bônus de streak); streak zera ao errar | RF10 |
 | Só avança ao acertar | O "Próximo" só aparece após o acerto | mecânica de retenção (Duolingo) |
 | Coloração | Ao **acertar**, a opção certa fica verde e as demais vermelhas; ao errar, nada é revelado | decisão de UX da equipe (não entregar a resposta no erro) |
+| Chat com a Lari | os exercícios são resolvidos como **conversa**: a Lari manda o desafio, o aluno responde, ela reage certo/errado e manda o próximo | feedback do orientador ("parecer um jogo"); lore |
+| Mini-aula (cápsula) | no **início de cada trilha** a Lari explica um pouco o conceito (1 bolha por frase), de forma tangencial | tangencial (MA 2023); campo `aula` da trilha |
+| Nota por exercício | **logo após o enunciado**, a Lari dá uma explicação/reforço curto do conceito daquele exercício | tangencial/reforço; campo `nota` do exercício |
+| Resposta por linha / gabarito rico | a resposta da Lari quebra **uma linha por saída/par**; em `saidaMultipla` com `gabarito`, numa **única mensagem** já nomeando a operação | legibilidade do feedback (decisão de UX) |
+| Fios (associação) | ligar pergunta→resposta **arrastando** um fio; opções **embaralhadas** para os fios certos **cruzarem** | minigame (engajamento); tipo `associacao` |
 | Pular exercício (teste) | Botão que pula sem resolver — **apenas para validar conteúdo** | ferramenta de desenvolvimento; remover na versão final |
 
 ### Os tipos de exercício (7 implementados + 1 futuro)
@@ -122,6 +127,34 @@ a 10ª é o projeto final). Princípios aplicados (detalhados em
 | `contrastantes` | escolher, entre versões quase idênticas, a correta (casos contrastantes) |
 | `parsons` | reordenar linhas embaralhadas até formar o programa (aceita várias ordens válidas) |
 | *resposta aberta por IA (8º, futuro)* | código avaliado por IA sob rubrica (ver trilha 10) |
+
+### Camada de apresentação: chat com a Lari (2026-10)
+
+Atendendo ao orientador ("parecer mais um jogo"), a **resolução** dos exercícios
+passou a acontecer num **chat com a Lari** — mas a **pedagogia não mudou**: são os
+mesmos 7 tipos, os mesmos enunciados, o mesmo gabarito e as mesmas mecânicas de jogo.
+Só a *apresentação* virou conversa. O que a conversa acrescenta (tudo baseado neste
+mesmo mapa de conteúdo):
+
+- **Mini-aula (cápsula) por trilha** (`aula`): a Lari abre a trilha explicando um
+  pouco o conceito, de forma tangencial (liga o conhecido → introduz o novo →
+  micro-exemplo). Uma por trilha, escrita nas **10**.
+- **Nota por exercício** (`nota`): logo depois do enunciado, uma explicação/reforço
+  curto do conceito daquele exercício (reforça o que já apareceu ou adianta de leve).
+  Escrita em **todos os exercícios das 10 trilhas**.
+- **Resposta por linha / gabarito rico** (`gabarito`): quando há várias saídas, a
+  resposta da Lari vem **uma por linha**; nos `saidaMultipla` com o campo `gabarito`,
+  numa **única mensagem** que já nomeia a operação (ex.: "Saida 1 e Subtracao, entao:
+  4 - 10 = -6"). Com `gabarito` em: lei1, lei4, ari1, ari6, boo3, boo6, rep1, rep4,
+  lis1, lis7.
+- **Minigames com cara de jogo**: Parsons reordena **arrastando**; a associação virou
+  **"fios"** (ligar pergunta→resposta arrastando), com as opções **embaralhadas** para
+  os fios certos **cruzarem** (menos óbvio). Fios em: lei8, tip1, lis3, fun4, bp4
+  (e boo1 com 2 alvos, sem cruzamento).
+
+Os campos `aula`, `nota` e `gabarito` são **opcionais** por exercício/trilha — um
+exercício sem eles simplesmente não mostra nada a mais, sem quebrar o motor. A lore
+completa do chat está em `LORE.md` ("Chat da Lari").
 
 ---
 
@@ -160,7 +193,12 @@ a 10ª é o projeto final). Princípios aplicados (detalhados em
 | lei5 | multipla | rastrear reatribuição de `a` e `b` | RA01 |
 | lei6 | parsons | ler 2 números e calcular média (`int(input)`) | RA01, Lista #1 [sup.] |
 | lei7 | saidaMultipla | atualizar a mesma variável passo a passo | RA01 |
-| lei8 | saidaMultipla | conta + comparação (prévia de booleano) | RA01 + RA03 (tangencial) |
+| lei8 | associacao (fios) | ligar contas ao resultado (`+`, `*`, `-`, `%`) | RA01 |
+
+> Mudança (2026-10): o antigo `lei8` (`saidaMultipla` com conta + comparação, prévia
+> de booleano) foi **removido** por repetir o padrão de `lei7`/anteriores; o minigame
+> de **fios** passou a ser o `lei8` (8º e último), fechando a trilha com operadores
+> variados. A Trilha 1 tem **8 exercícios**.
 
 ### Trilha 2 — Tipos de Dados (TE1 / RA01)
 

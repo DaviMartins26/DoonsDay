@@ -165,6 +165,7 @@ export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
   return (
     <TelaChat
       trilhaTitulo={trilha.titulo}
+      aula={trilha.aula || null}
       vidas={vidas}
       streak={streak}
       xpTotal={xpTotal}

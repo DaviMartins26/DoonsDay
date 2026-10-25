@@ -8,11 +8,18 @@ export default {
   id: 'booleanos',
   titulo: 'Verdadeiro ou Falso',
   descricao: 'Comparacoes e operadores logicos: quando uma condicao vale True ou False.',
+  // Mini-aula (cápsula): a Lari conecta o conhecido -> introduz o novo -> micro-exemplo.
+  aula: [
+    'Ate agora o codigo so calculava; agora ele vai RESPONDER perguntas com sim ou nao.',
+    'Comparacoes como == (igual), != (diferente), > e < devolvem True ou False.',
+    'E da para juntar varias: and (as duas verdadeiras), or (ao menos uma), not (inverte). Vamos testar!',
+  ],
   exercicios: [
     {
       id: 'boo1',
       tipo: 'associacao',
       titulo: 'True ou False?',
+      nota: 'Relembrando os sinais: == e igual, != e diferente, e >= / <= tambem aceitam o igual.',
       enunciado: 'Associe cada expressao ao seu valor logico.',
       esquerda: ['4 == 4', '4 != 4', '3 > 5', '10 >= 10', '5 > 3', '2 == 4'],
       opcoes: ['True', 'False'],
@@ -25,6 +32,7 @@ export default {
       id: 'boo2',
       tipo: 'multipla',
       titulo: 'Expressao logica combinada',
+      nota: 'Resolva por partes: primeiro cada comparacao, depois o not, e por fim o and.',
       enunciado: 'Qual o valor de not (2 > 5) and (3 == 3)?',
       opcoes: ['True', 'False'],
       correta: 0,
@@ -36,6 +44,7 @@ export default {
       id: 'boo3',
       tipo: 'saidaMultipla',
       titulo: 'and, or, not',
+      nota: 'Os tres: and so e True se as duas forem; or e True se ao menos uma for; not inverte.',
       enunciado: 'O que cada linha imprime?',
       codigo: 'a = True\nb = False\nprint(a and b)\nprint(a or b)\nprint(not a)',
       rotulos: ['Saida 1', 'Saida 2', 'Saida 3'],
@@ -43,11 +52,17 @@ export default {
       dica: 'and so e True se ambos forem; or e True se ao menos um for; not inverte.',
       feedbackCerto: 'Isso. True and False = False; True or False = True; not True = False.',
       feedbackErrado: 'a and b = False, a or b = True, not a = False.',
+      gabarito: [
+        'Saida 1 e E (and): True and False = False',
+        'Saida 2 e OU (or): True or False = True',
+        'Saida 3 e NAO (not): not True = False',
+      ],
     },
     {
       id: 'boo4',
       tipo: 'contrastantes',
       titulo: 'Entre 1 e 10',
+      nota: '"Entre 1 e 10" precisa dos dois limites juntos (and), aceitando as pontas: 1 <= x <= 10.',
       enunciado: 'Qual condicao e verdadeira so quando x esta entre 1 e 10 (inclusive)?',
       versoes: [
         { rotulo: 'Versao A', codigo: '1 <= x <= 10' },
@@ -63,6 +78,7 @@ export default {
       id: 'boo5',
       tipo: 'multipla',
       titulo: 'Condicao com variaveis',
+      nota: 'Troque cada variavel pelo valor dela e resolva a comparacao - como numa conta.',
       enunciado: 'O que o programa imprime?',
       codigo: 'idade = 20\ntem_carteira = True\nprint(idade >= 18 and tem_carteira)',
       opcoes: ['True', 'False'],
@@ -75,6 +91,7 @@ export default {
       id: 'boo6',
       tipo: 'saidaMultipla',
       titulo: 'Varias comparacoes',
+      nota: 'Resolva cada comparacao primeiro (True/False) e so depois aplique o and, or ou not.',
       enunciado: 'Com x = 5, o que cada linha imprime?',
       codigo: 'x = 5\nprint(x > 0 and x < 10)\nprint(x > 10 or x == 5)\nprint(not x == 5)',
       rotulos: ['Saida 1', 'Saida 2', 'Saida 3'],
@@ -82,12 +99,18 @@ export default {
       dica: 'Resolva cada comparacao e depois aplique and / or / not.',
       feedbackCerto: 'Isso. (5>0 and 5<10)=True; (5>10 or 5==5)=True; not(5==5)=False.',
       feedbackErrado: 'True (entre 0 e 10); True (x==5); False (not True).',
+      gabarito: [
+        'Saida 1: 5>0 e 5<10 sao True, e True and True = True',
+        'Saida 2: 5>10 e False, mas 5==5 e True, e False or True = True',
+        'Saida 3: 5==5 e True, e not True = False',
+      ],
     },
     // ---- os dois ultimos: mais dificeis ----
     {
       id: 'boo7',
       tipo: 'multipla',
       titulo: 'Precedencia de and e or',
+      nota: 'Igual a conta: o and e avaliado antes do or. Resolva o and primeiro.',
       enunciado: 'O que o programa imprime?',
       codigo: 'print(True or False and False)',
       opcoes: ['True', 'False'],
@@ -100,6 +123,7 @@ export default {
       id: 'boo8',
       tipo: 'contrastantes',
       titulo: 'Fora do intervalo',
+      nota: 'Negar "entre 1 e 10" vira "menor que 1 OU maior que 10" (a ideia de De Morgan).',
       enunciado: 'Qual condicao e True quando x NAO esta entre 1 e 10?',
       versoes: [
         { rotulo: 'Versao A', codigo: 'x < 1 or x > 10' },

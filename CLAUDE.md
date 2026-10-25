@@ -334,3 +334,107 @@ Monetização está fora de escopo (definição do TCC).
   (ex.: `{xp}`), e o `Jogo.jsx` injeta `{ xp: xpTotal }` no quadrinho final — a
   fala da condecoração mostra a **pontuação real do jogador** (verificado: 110 XP
   após acertar o ex1 e pular o resto), não mais um valor fixo.
+- **2026-10-24:** Sincronização de planejamento. `ROADMAP-ENTREGA2.md` atualizado:
+  marcados como concluídos os itens já feitos das frentes 1 (Metodologia, menos a
+  validação com a orientadora), 2 (História/Lore), 4 (Consolidar MVP) e parte das
+  frentes 5 e 6. No **Trello** (quadro TCC-Parte1), criados checklists "Progresso"
+  nos 6 cards da Sprint 2 (26 itens, 12 concluídos) e movidos para "Desenvolvimento"
+  os cards Documento Somativa II, Assistente IA e Paralelos Assíncronos (nenhum card
+  movido para "Pronto", por decisão da equipe).
+- **2026-10-24:** Documento da Entrega II. Gerado `Documento/DevForge_entrega-II_V1.0.docx`
+  com as seções desenvolvidas (3.3 Especificação da Solução — quadro do jogo + tabela
+  Id/Resultado de Aprendizagem/Tema de Estudo/Mecânica com os 10 RA da trilha; 3.4
+  Considerações; Cap. 4 Validação da Ferramenta no modelo MEEGA+; Cap. 5 Informações
+  do Projeto com riscos atualizados). Após revisão da equipe: o Cap. 5 foi descartado
+  por ora; o Cap. 4 precisa ser alinhado com o orientador e reescrito para **não ser
+  cópia** do exemplo (risco de plágio); o Cap. 3 foi editado manualmente pelo Davi.
+- **2026-10-24:** Montado o documento **completo** `Documento/DevForge_entrega-II_V1.1.docx`
+  a partir de `Artigos/DevForge-5.4.3.docx` (fonte editável equivalente ao
+  `DevForge-TCC.pdf`, com personas, tabelas e referências reais): inserida a 3.3
+  Especificação da Solução (versão editada do Cap. 3), a antiga 3.3 Considerações
+  renumerada para 3.4, inserido o Cap. 4 Validação da Ferramenta reescrito em texto
+  próprio (MEEGA+ citado, não copiado; marcado como rascunho pendente do orientador)
+  e o antigo Cap. 4 Informações do Projeto empurrado para Cap. 5 (conteúdo original
+  intacto, só renumerado). A numeração de capítulos/seções é automática (mesmo
+  `numId` das Heading), então renumera sozinha ao abrir no Word (atualizar o Sumário
+  com F9). Validado por XSD (`validate.py`). **Nada commitado no Git.** Pendências:
+  validar a metodologia com a orientadora, alinhar o Cap. 4 com o orientador e, no
+  futuro, melhorar o documento; a base v1.1 é de 26/09, conferir contra o PDF (17/10).
+- **2026-10-25:** **Chat com a Lari + visual de jogo** (feedback do orientador: "parecer
+  mais um jogo"). A resolução de exercícios virou uma **conversa com a Lari**
+  (`src/jogo/telas/TelaChat.jsx`, no lugar da `TelaExercicio`, que ficou de reserva):
+  a Lari manda o exercício como mensagem, a resposta é enviada, ela "digita" (...) e
+  responde certo/errado; acertando, manda o próximo. Histórico das trocas (some no F5).
+  A **dica** virou conversa (pede → confirma → −1 energia → dica como mensagem) e há
+  **aviso quando um erro custa energia**. Falas humanas (saudação/ponte sorteadas).
+  Cada mensagem tem um **avatar por humor** (normal/dúvida/erro) em `public/chat/lari/`
+  (fontes em `lore/Lari/`); o modelo já suporta **outro personagem** mandando mensagem
+  numa trilha futura (o rosto do jogador não aparece). **Tema DevForge global**
+  (`styles.css`): paleta em `:root` (neon cyan/âmbar), fundo do laboratório
+  (`public/chat/lab-bg.jpg`, origem `lore/Chat/fundo.jfif`) em todas as telas; catálogo,
+  conclusão e lição interrompida retematizados. **Minigames**: Parsons reordena
+  **arrastando** a linha (saiu subir/descer); associação virou **"fios"** (arrastar da
+  pergunta até a resposta, SVG) — sem dependência externa, `verificar` inalterado.
+  **Responsivo (mobile)**: no celular o chat vira tela cheia. **Testes**: novo
+  `render.test.jsx` (monta o campo de cada exercício: 73) além do gabarito (367) —
+  **440 passando**; devDeps `jsdom` + `@testing-library/react`. O código base
+  (chat/tema/minigames/falas/testes) foi commitado em `2e88e1d`; o **fundo novo, os
+  avatares da Lari e o responsivo ainda não foram commitados**.
+- **2026-10-25:** Ajustes na Trilha 1 e no chat. **lei4**: o exemplo no enunciado
+  deixou de entregar a resposta (`2.5` → `1.2`). **lei8**: tirada a comparação
+  booleana (`> 25`, resultado `True`) — booleanos só aparecem na trilha 4; virou
+  duas contas (30 e 13). **Minigame de FIOS adicionado na Trilha 1** (`lei9`: ligar
+  a conta ao resultado) + **instrução visível** no minigame ("arraste um fio..."). A
+  mensagem de perda de energia virou "Esse erro custou energia. Sem pressa, você
+  consegue.". **Novos rostos da Lari** (alta resolução em `lore/Lari/`)
+  redimensionados para `public/chat/lari/`. Testes: **446** passando. Pendente de
+  ideia/implementação: a Lari dar uma **mini-aula tangencial** (explicar um pouco o
+  conceito, sem virar aula). (Nada commitado ainda.)
+- **2026-10-25:** **Mini-aula tangencial da Lari** (cápsula por trilha): campo opcional
+  `aula: [...]` na trilha; a Lari manda essas frases (uma bolha por frase) ANTES do 1º
+  exercício, explicando um pouco o conceito sem virar aula. Escrita a cápsula da Trilha
+  1 (`leitura.js`) como demo; `Jogo.jsx` passa `aula` ao `TelaChat` (trilha sem `aula`
+  não mostra nada). **Respostas por linha**: na `saidaMultipla` a resposta enviada
+  aparece com **uma saída por linha** ("Saida 1: 8" / "Saida 2: 15"...) em vez de tudo
+  grudado, e as bolhas passam a respeitar quebras de linha (`white-space: pre-line`).
+  446 testes passando. (Nada commitado ainda.)
+- **2026-10-25:** Mais ajustes no chat e nas trilhas. **Resposta da Lari por linha**:
+  quando o exercício tem várias saídas (`saidaMultipla`), além da frase, a Lari manda
+  o gabarito com **uma saída por linha** (`gabaritoLinhas()` em `TelaChat.jsx`), igual
+  à nossa bolha — no acerto, e no erro só quando ela já revela a resposta completa.
+  **Trilha 1**: removido o antigo `lei8` ("Duas contas"), que repetia o padrão de
+  multiplicar/somar; o fios virou `lei8` (o 8º/último) com **operadores variados**
+  (`4 + 3`, `2 * 5`, `9 - 3`, `8 % 3` → 7, 10, 6, 2), introduzindo o resto (`%`) no
+  minigame. Trilha 1 fica com **8 exercícios**. **Mini-aulas em TODAS as trilhas**:
+  cápsula `aula: [...]` escrita para as 10 trilhas (antes só a 1 tinha), cada uma
+  seguindo o conteúdo mapeado em `METODOLOGIA-EXERCICIOS.md` (tema/RA de origem) e a
+  abordagem tangencial (liga o conhecido → introduz o novo → micro-exemplo). Testes:
+  **440** passando (6 a menos: 1 exercício removido). (Nada commitado ainda.)
+- **2026-10-25:** Fios mais difíceis + Lari por linha em tudo + explicação por exercício.
+  **Fios cruzando**: nas associações em que as `opcoes` vinham alinhadas 1-a-1 com a
+  esquerda (`tip1`, `lis3`, `fun4`, `bp4`), a ordem de `opcoes` foi embaralhada para os
+  fios certos se **cruzarem** (só visual; `verificar` compara por valor, não por posição).
+  **Resposta da Lari por linha também na `associacao`**: `gabaritoLinhas()` passou a cobrir
+  fios ("42 → int"...), não só `saidaMultipla`; a bolha da nossa resposta de fios também
+  quebra por par. **Mini-explicação por exercício**: campo opcional `nota` no exercício —
+  a Lari manda essa explicação/reforço ANTES do desafio (reforça o que já apareceu ou
+  adianta de leve o que vem). Escritas as `nota` da **Trilha 1** (8 exercícios) como demo;
+  as trilhas 2–10 ainda sem `nota` (campo opcional, não quebra nada). 440 testes passando.
+  (Nada commitado ainda.)
+- **2026-10-25:** Ajustes de ordem e de formato da resposta no chat. **Ordem**: a `nota`
+  do exercício agora vem DEPOIS do enunciado (antes parecia que a Lari explicava o conceito
+  e só então apresentava o exercício como novidade). **Gabarito rico (uma mensagem)**: campo
+  opcional `gabarito: [...]` (uma linha por saída, já nomeando a operação); quando presente,
+  a Lari manda UMA só mensagem com ele, no lugar da frase + gabarito genérico. Escrito o
+  `gabarito` do **lei4** como demo ("Saida 1 e Subtracao, entao: 4 - 10 = -6"...). Exercícios
+  sem `gabarito` seguem no formato antigo (frase + gabarito genérico por linha). 440 testes
+  passando. (Nada commitado ainda.)
+- **2026-10-25:** Rollout completo da camada de chat para **TODAS as trilhas**. **`nota`
+  por exercício** escrita em todos os exercícios das 10 trilhas (antes só a 1), cada uma
+  seguindo o conceito do exercício (mapa em `METODOLOGIA-EXERCICIOS.md`) e vindo DEPOIS do
+  enunciado. **`gabarito` rico (uma mensagem, uma linha por saída, nomeando a operação)**
+  adicionado a todos os `saidaMultipla` de várias saídas: lei1, lei4, ari1, ari6, boo3,
+  boo6, rep1, rep4, lis1, lis7. Validado no navegador (trilha 3 `ari1`: cápsula → enunciado
+  → nota → nossa resposta por linha → uma mensagem rica da Lari). 440 testes passando.
+  `METODOLOGIA-EXERCICIOS.md` (nova seção "Camada de apresentação: chat com a Lari" + tabela
+  de mecânicas + correção do `lei8`) e `LORE.md` atualizados. Commit + push desta rodada.
