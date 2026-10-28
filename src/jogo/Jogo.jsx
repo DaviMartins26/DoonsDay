@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { verificar, respostaInicial, temResposta } from '../exercicios/registro.jsx'
 import {
   VIDAS_INICIAIS,
+  ENERGIA_IA_INICIAL,
   ERROS_PARA_PERDER_VIDA,
   XP_BASE,
   XP_PENALIDADE_ERRO,
@@ -60,6 +61,8 @@ export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
   const [vidas, setVidas] = useState(VIDAS_INICIAIS)
   const [streak, setStreak] = useState(0)
   const [xpTotal, setXpTotal] = useState(0)
+  // Energia do chat com o Outro (moeda separada das vidas).
+  const [energiaIA, setEnergiaIA] = useState(ENERGIA_IA_INICIAL)
 
   const [finalizado, setFinalizado] = useState(false)
   // Se ja viu o quadrinho de fechamento da trilha (quando houver roteiroFinal).
@@ -107,6 +110,7 @@ export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
 
   // Passo 2: o usuario confirma -> troca 1 de energia pela dica.
   function aoConfirmarDica() {
+    // Dica da Lari custa 1 VIDA (nao e de graca). So a energia e pro Albert.
     setVidas((v) => v - 1)
     setDicaPedida(true)
     setConfirmandoDica(false)
@@ -118,6 +122,11 @@ export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
 
   function aoTentarDeNovo() {
     setResultado(null)
+  }
+
+  // Gasta 1 de energia do chat com o Outro (nao mexe nas vidas).
+  function aoGastarEnergiaIA() {
+    setEnergiaIA((e) => Math.max(0, e - 1))
   }
 
   function aoAvancar() {
@@ -134,6 +143,7 @@ export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
     setDicaPedida(false)
     setConfirmandoDica(false)
     setVidas(VIDAS_INICIAIS)
+    setEnergiaIA(ENERGIA_IA_INICIAL)
     setStreak(0)
     setXpTotal(0)
     setFinalizado(false)
@@ -169,6 +179,8 @@ export default function Jogo({ trilha, aoVoltar, roteiroFinal = null }) {
       vidas={vidas}
       streak={streak}
       xpTotal={xpTotal}
+      energiaIA={energiaIA}
+      aoGastarEnergiaIA={aoGastarEnergiaIA}
       indice={indice}
       total={total}
       ultimo={ultimo}

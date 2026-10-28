@@ -102,9 +102,10 @@ a 10ª é o projeto final). Princípios aplicados (detalhados em
 
 | Mecânica | Como funciona | Base |
 |----------|---------------|------|
-| Energia | 10 de energia; perde 1 a partir do **3º erro** na mesma atividade | RF07, RF08; lore (robô → "energia", não "vida") |
+| Vida (antes "energia") | começa com 10; perde 1 a partir do **3º erro** na mesma atividade (e ao pedir a dica); zera a lição | RF07, RF08 |
+| Energia (moeda do chat com o Albert) | moeda à parte; cada dúvida ao Albert custa 1; tem um **cronômetro de recarga** de 24h (visual — recarga real pendente) | pivot 2026-10 (ver `PIVOT-CHAT-OUTRO.md`) |
 | Dica progressiva | Erro 1–2 só sinaliza; 3º libera a dica; 4º+ mostra a resposta | RF06 |
-| Dica sob demanda | Botão troca **1 de energia por uma dica** (confirmação na página) | RF06/RF09 + questão em aberto "pedir dica consome energia?" |
+| Dica sob demanda | Botão troca **1 de vida por uma dica** (confirmação na página); a dica é dada pela **Lari** | RF06/RF09 |
 | XP e streak | XP por acerto (base − erros + bônus de streak); streak zera ao errar | RF10 |
 | Só avança ao acertar | O "Próximo" só aparece após o acerto | mecânica de retenção (Duolingo) |
 | Coloração | Ao **acertar**, a opção certa fica verde e as demais vermelhas; ao errar, nada é revelado | decisão de UX da equipe (não entregar a resposta no erro) |
@@ -113,6 +114,7 @@ a 10ª é o projeto final). Princípios aplicados (detalhados em
 | Nota por exercício | **logo após o enunciado**, a Lari dá uma explicação/reforço curto do conceito daquele exercício | tangencial/reforço; campo `nota` do exercício |
 | Resposta por linha / gabarito rico | a resposta da Lari quebra **uma linha por saída/par**; em `saidaMultipla` com `gabarito`, numa **única mensagem** já nomeando a operação | legibilidade do feedback (decisão de UX) |
 | Fios (associação) | ligar pergunta→resposta **arrastando** um fio; opções **embaralhadas** para os fios certos **cruzarem** | minigame (engajamento); tipo `associacao` |
+| Chat de dúvidas (Albert) | novo personagem **Albert** (robô sábio ancião); o aluno pergunta sobre o exercício/linguagem e ele responde, gastando **energia** (mock; depois Claude real) | pivot 2026-10 (RF15); ver `PIVOT-CHAT-OUTRO.md` |
 | Pular exercício (teste) | Botão que pula sem resolver — **apenas para validar conteúdo** | ferramenta de desenvolvimento; remover na versão final |
 
 ### Os tipos de exercício (7 implementados + 1 futuro)
@@ -126,7 +128,7 @@ a 10ª é o projeto final). Princípios aplicados (detalhados em
 | `associacao` | relacionar itens a resultados (com distratores) |
 | `contrastantes` | escolher, entre versões quase idênticas, a correta (casos contrastantes) |
 | `parsons` | reordenar linhas embaralhadas até formar o programa (aceita várias ordens válidas) |
-| *resposta aberta por IA (8º, futuro)* | código avaliado por IA sob rubrica (ver trilha 10) |
+| `respostaIA` (8º) | código avaliado por IA sob rubrica — **removido do app** (a Trilha 10 saiu); o uso de IA virou um **chat de dúvidas com o Albert** (ver `PIVOT-CHAT-OUTRO.md`); ideia registrada em `DESIGN-TIPO-IA.md` |
 
 ### Camada de apresentação: chat com a Lari (2026-10)
 
@@ -171,7 +173,7 @@ completa do chat está em `LORE.md` ("Chat da Lari").
 | 7 | Listas e Matrizes | TE3 | RA06, RA08 |
 | 8 | Funções | TE4 | RA09 |
 | 9 | Boas Práticas e Testes | TE5 | TE5 + Eng. de Software aplicada |
-| 10 | Projeto Final (GitHub + IA) | RA1 + RA2 | capstone (integrador) |
+| ~~10~~ | ~~Projeto Final (GitHub + IA)~~ | — | **removida** (pivot 2026-10 → chat do Albert) |
 
 ---
 
@@ -308,7 +310,11 @@ completa do chat está em `LORE.md` ("Chat da Lari").
 > aplicada ao próprio código**, não como trilha isolada: legibilidade, DRY e
 > verificação/validação entram sobre exemplos que o aluno já sabe escrever.
 
-### Trilha 10 — Projeto Final (capstone)
+### Trilha 10 — Projeto Final (capstone) — REMOVIDA (pivot 2026-10)
+
+> **Removida do app.** Com o pivot do uso de IA para o **chat de dúvidas com o Albert**
+> (ver `PIVOT-CHAT-OUTRO.md`), a trilha do capstone saiu; o bloco ficou com **9 trilhas**.
+> O texto abaixo fica como registro histórico da ideia.
 
 | id | tipo | Objetivo | Base |
 |----|------|----------|------|
@@ -317,8 +323,10 @@ completa do chat está em `LORE.md` ("Chat da Lari").
 O aluno resolve um problema completo em Python (no nível de `Máquina de Bebida` /
 `Matriz-Ex`), sobe no GitHub e a IA avalia o código sob rubrica, **apoiando o
 raciocínio sem entregar a resposta** (human-in-the-loop). É o **8º tipo de
-exercício** (resposta aberta por IA), ainda não implementado — depende do backend.
-Detalhes em `METODOLOGIA-TRILHA1.md` (seção 8).
+exercício** (resposta aberta por IA), já implementado como **mock no app** (tela
+`TelaProjetoIA`, isolada do motor dos 7 tipos; sem backend ainda) — a chamada real
+à IA entra depois por uma Azure Function. Design em `DESIGN-TIPO-IA.md`; detalhes
+pedagógicos em `METODOLOGIA-TRILHA1.md` (seção 8).
 
 ---
 

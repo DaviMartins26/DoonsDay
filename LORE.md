@@ -486,6 +486,20 @@ resposta dela vem como **uma mensagem só**, uma linha por saída já nomeando a
 Essa camada (cápsula, nota, resposta por linha, fios que cruzam) já vale para **todas
 as 10 trilhas**.
 
+## Albert (mentor de dúvidas por IA) — 2026-10-27
+
+Novo personagem: **Albert**, um robô **sábio e ancião**, "da **gestão anterior**" —
+piada que explica, na própria lore, por que a arte dele destoa dos outros robôs. Vive
+meio adormecido e é "caro" de consultar. É o canal de **dúvidas por IA**: o aluno
+pergunta sobre o exercício ou a linguagem e o Albert responde (mock por enquanto;
+depois, o Claude de verdade). Consultar o Albert custa **Energia** (⚡), uma moeda à
+parte, com um **cronômetro de recarga** (24h — por ora só visual). As **dicas** do
+exercício seguem com a **Lari** e custam **1 Vida** (❤️). A Lari continua apresentando
+os exercícios e apresenta o Albert na abertura. Renomeação: a antiga "energia" de
+errar exercício virou **Vida**; "Energia" é só a moeda do Albert. O Albert avisa que
+pergunta fora do assunto ou imprópria gasta energia do mesmo jeito. Plano e prompt de
+arte em `PIVOT-CHAT-OUTRO.md`.
+
 ## 8. Próximos passos
 
 1. Fechar as perguntas em aberto com a equipe (nome da Lari, formato de dados).

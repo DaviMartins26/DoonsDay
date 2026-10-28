@@ -9,13 +9,13 @@
 //   import { VIDAS_INICIAIS } from './config.js'
 // ============================================================================
 
-// Quantidade de ENERGIA com que o usuario comeca a trilha (a lore trata como
-// "energia" do robo, nao "vidas"). Nao reinicia entre exercicios; so o botao
-// "Recomecar" zera. Valor alinhado a regra final do TCC (RF07): 10 de energia.
-// (Para TESTAR erros/interrupcao rapidamente, baixe este valor temporariamente.)
+// Quantidade de VIDA com que o usuario comeca a trilha (antes chamada "energia";
+// renomeada para Vida - a "energia" agora e a moeda do chat com o Albert). Nao
+// reinicia entre exercicios; so o "Recomecar" zera. RF07: 10. (Para TESTAR a
+// interrupcao, baixe este valor temporariamente.)
 export const VIDAS_INICIAIS = 10
 
-// A cada quantos erros no MESMO exercicio o usuario perde 1 de energia.
+// A cada quantos erros no MESMO exercicio o usuario perde 1 de VIDA.
 // Alinhado ao TCC (RF08): a perda comeca a partir do 3o erro (e depois 6o, 9o...).
 export const ERROS_PARA_PERDER_VIDA = 3
 
@@ -48,3 +48,7 @@ export const ERROS_PARA_RESPOSTA = 4
 
 // Mensagem mostrada nos primeiros erros, antes de liberar a dica.
 export const MENSAGEM_ERRO_SIMPLES = 'Resposta errada. Tente de novo.'
+
+// Energia do CHAT com a IA (o "Outro"): moeda separada das vidas. Cada duvida
+// perguntada no chat custa 1. (Prototipo: valor baixo pra testar.)
+export const ENERGIA_IA_INICIAL = 3

@@ -6,7 +6,7 @@ export default function TelaLicaoInterrompida({ xpTotal, aoRecomecar, aoVoltar }
       <div className="df-cartao">
         <h1>DevForge</h1>
         <h2>Licao interrompida</h2>
-        <p>Voce ficou sem energia.</p>
+        <p>Voce ficou sem vida.</p>
         <p>XP acumulado: {xpTotal}</p>
         <div className="df-acoes">
           <button type="button" className="df-primario" onClick={aoRecomecar}>

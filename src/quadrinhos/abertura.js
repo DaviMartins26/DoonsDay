@@ -60,8 +60,8 @@ export default {
         {
           quem: 'lari', x: 11, y: 11, w: 27,
           texto: {
-            pt: 'Voce comeca com energia. Errar demais esgota ela - calma e capricho valem mais que pressa.',
-            en: 'You start with energy. Too many mistakes drain it - care beats rushing.',
+            pt: 'Voce comeca com vidas. Errar demais esgota elas - calma e capricho valem mais que pressa.',
+            en: 'You start with lives. Too many mistakes drain them - care beats rushing.',
           },
         },
       ],
@@ -74,8 +74,22 @@ export default {
         {
           quem: 'lari', x: 13, y: 11, w: 29,
           texto: {
-            pt: 'Travou? Me chama. Eu te dou uma luz... mas a dica gasta uma faisca de energia. Combinado?',
-            en: "Stuck? Call me. I'll light the way... but a hint costs a spark of energy. Deal?",
+            pt: 'Travou? Me chama. Eu te dou uma dica... mas ela gasta 1 vida. Combinado?',
+            en: "Stuck? Call me. I'll give you a hint... but it costs 1 life. Deal?",
+          },
+        },
+      ],
+    },
+    {
+      id: 'q4b',
+      imagem: '/quadrinhos/intro/QuadroAlbert.jpeg',
+      descricao: 'Lari (direita) apresenta o Albert: um robo anciao de bronze, barbudo, meio adormecido, ao lado do jogador.',
+      baloes: [
+        {
+          quem: 'lari', x: 73, y: 9, w: 25,
+          texto: {
+            pt: 'Esse e o Albert... a aparencia dele e diferente porque ele e da gestao anterior. Mas o conhecimento e infinito: ele te ajuda - por um preco.',
+            en: "That's Albert... he looks different because he's from the previous management. But his knowledge is infinite: he can help you - for a price.",
           },
         },
       ],

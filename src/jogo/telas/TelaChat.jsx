@@ -19,6 +19,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { CampoResposta } from '../../exercicios/registro.jsx'
+import { ENERGIA_IA_INICIAL } from '../../config.js'
 
 // Rostos por personagem e humor (em public/chat/...). normal = padrao.
 const AVATARES = {
@@ -28,6 +29,8 @@ const AVATARES = {
     erro: '/chat/lari/erro.png',
   },
 }
+// Rosto do Albert no chat (uma arte so; ele e da "gestao anterior", estilo diferente).
+const ALBERT_ICON = '/chat/albert/icone.png'
 
 // Resume a resposta do usuario em texto, para mostrar na bolha "nos".
 function resumirResposta(exercicio, resposta) {
@@ -92,10 +95,25 @@ const PONTES = [
   'Perfeito, mais um ponto! Agora essa:',
 ]
 const PERDA_ENERGIA = [
-  'Ih... essa custou 1 de energia. Bora com calma!',
-  'Opa, la se foi 1 de energia. Respira e tenta de novo.',
-  'Esse erro custou energia. Sem pressa, voce consegue.',
+  'Ih... essa custou 1 de vida. Bora com calma!',
+  'Opa, la se foi 1 de vida. Respira e tenta de novo.',
+  'Esse erro custou vida. Sem pressa, voce consegue.',
 ]
+// Aberturas do Albert (robo sabio anciao) nas respostas de duvida (mock).
+const ALBERT_ABERTURAS = [
+  'Boa pergunta, jovem aprendiz.',
+  'Hmm. Deixa este velho circuito pensar...',
+  'Entendo tua duvida.',
+  'Ja processei muitos bugs em meus longos ciclos.',
+]
+// Formata o cronometro de recarga de energia (ex.: "23h 59m 58s").
+function formatarRecarga(s) {
+  const h = Math.floor(s / 3600)
+  const m = Math.floor((s % 3600) / 60)
+  const sec = s % 60
+  const dois = (n) => String(n).padStart(2, '0')
+  return `${h}h ${dois(m)}m ${dois(sec)}s`
+}
 function sortear(frases) {
   return frases[Math.floor(Math.random() * frases.length)]
 }
@@ -123,6 +141,8 @@ export default function TelaChat({
   aoAvancar,
   aoVoltar,
   aula,
+  energiaIA,
+  aoGastarEnergiaIA,
 }) {
   const [mensagens, setMensagens] = useState([])
   const [digitando, setDigitando] = useState(false)
@@ -131,6 +151,16 @@ export default function TelaChat({
   const aguardaFeedbackRef = useRef(false)
   const vidasAntesRef = useRef(vidas) // energia ANTES de verificar (p/ detectar a perda)
   const aulaFeitaRef = useRef(false) // se a mini-aula da trilha ja foi mostrada
+
+  // Overlay "Falar com o Outro": chat de duvidas com a IA. Moeda propria
+  // (energiaIA): cada pergunta custa 1. Respostas MOCKADAS por enquanto.
+  const [duvidaAberta, setDuvidaAberta] = useState(false)
+  const [duvidaMsgs, setDuvidaMsgs] = useState([])
+  const [duvidaInput, setDuvidaInput] = useState('')
+  const [duvidaDigitando, setDuvidaDigitando] = useState(false)
+  const [duvidaErro, setDuvidaErro] = useState('')
+  const [recargaSeg, setRecargaSeg] = useState(null) // cronometro (mock) de recarga de energia
+  const duvidaFimRef = useRef(null)
 
   // de = 'lari' | 'nos' (futuramente 'rival', 'chef'...); humor = normal/dica/erro.
   function push(de, texto, codigo, humor = 'normal') {
@@ -206,6 +236,23 @@ export default function TelaChat({
     fimRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [mensagens, digitando])
 
+  // Rola o chat de duvidas (overlay do Albert).
+  useEffect(() => {
+    duvidaFimRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [duvidaMsgs, duvidaDigitando])
+
+  // Cronometro (mock) de recarga: com energia abaixo do maximo, mostra "nova
+  // energia em 24h". Ainda nao recarrega de verdade - so o visual do contador.
+  useEffect(() => {
+    if (energiaIA >= ENERGIA_IA_INICIAL) {
+      setRecargaSeg(null)
+      return
+    }
+    setRecargaSeg((s) => (s == null ? 24 * 3600 : s))
+    const id = setInterval(() => setRecargaSeg((s) => (s == null ? s : Math.max(0, s - 1))), 1000)
+    return () => clearInterval(id)
+  }, [energiaIA])
+
   function enviar() {
     vidasAntesRef.current = vidas // guarda a energia atual p/ comparar depois de verificar
     push('nos', resumirResposta(exercicio, resposta))
@@ -214,7 +261,7 @@ export default function TelaChat({
   }
   function pedirDica() {
     push('nos', 'Posso pedir uma dica?')
-    push('lari', 'Posso te dar uma luz, mas processar a dica custa 1 de energia. Topas?', undefined, 'dica')
+    push('lari', 'Claro! A dica custa 1 vida. Quer que eu mostre?', undefined, 'dica')
     aoPedirDica()
   }
   function dicaSim() {
@@ -228,7 +275,60 @@ export default function TelaChat({
     aoCancelarDica()
   }
 
+  // ---- Chat de duvidas com o Outro (mock, sem backend ainda) ---------------
+  function abrirDuvida() {
+    if (!duvidaMsgs.length) {
+      setDuvidaMsgs([
+        {
+          de: 'albert',
+          texto:
+            'Eu sou o Albert. Pergunte sobre o exercicio ou sobre a linguagem - cada pergunta custa 1 de energia. Aviso: pergunta fora do assunto ou impropria gasta energia do mesmo jeito.',
+        },
+      ])
+    }
+    setDuvidaErro('')
+    setDuvidaAberta(true)
+  }
+  function enviarDuvida() {
+    const q = duvidaInput.trim()
+    if (!q) {
+      setDuvidaErro('Escreva sua duvida primeiro.')
+      return
+    }
+    if (energiaIA <= 0) {
+      setDuvidaErro('Sem energia para perguntar agora.')
+      return
+    }
+    setDuvidaErro('')
+    setDuvidaInput('')
+    setDuvidaMsgs((m) => [...m, { de: 'nos', texto: q }])
+    aoGastarEnergiaIA()
+    setDuvidaDigitando(true)
+    // MOCK: aqui, no futuro, entra a chamada real ao Claude (ver DESIGN-TIPO-IA.md).
+    setTimeout(() => {
+      setDuvidaDigitando(false)
+      setDuvidaMsgs((m) => [
+        ...m,
+        {
+          de: 'albert',
+          texto:
+            sortear(ALBERT_ABERTURAS) +
+            ' Acompanhe o codigo linha por linha e teste com um exemplo pequeno; costuma revelar o ponto. (resposta de exemplo - aqui vai entrar o Claude de verdade.)',
+        },
+      ])
+    }, 800)
+  }
+
   const respondendo = resultado === null && !confirmandoDica && !digitando
+
+  // Avatar da mensagem: a Lari usa foto; o Outro usa um placeholder (sem arte
+  // ainda); o jogador ("nos") nao mostra rosto.
+  function Avatar({ de, humor }) {
+    if (de === 'lari')
+      return <img className="chat-avatar" src={AVATARES.lari[humor || 'normal']} alt="" />
+    if (de === 'albert') return <img className="chat-avatar" src={ALBERT_ICON} alt="" />
+    return null
+  }
 
   return (
     <div className="chat-tela">
@@ -247,25 +347,26 @@ export default function TelaChat({
               </span>
             </div>
             <div className="chat-hud">
-              <span title="Energia">🔋 {vidas}</span>
+              <span title="Vida (erros no exercicio)">❤️ {vidas}</span>
+              <span title="Energia (chat com o Albert)">⚡ {energiaIA}</span>
+              {recargaSeg != null && (
+                <span title="Recarga da energia do Albert">🕒 {formatarRecarga(recargaSeg)}</span>
+              )}
               <span title="Streak">🔥 {streak}</span>
               <span title="XP">✦ {xpTotal}</span>
             </div>
           </header>
 
           <div className="chat-log">
-            {mensagens.map((m, i) => {
-              const avatar = AVATARES[m.de] && AVATARES[m.de][m.humor || 'normal']
-              return (
-                <div key={i} className={'chat-msg chat-msg-' + m.de}>
-                  {avatar && <img className="chat-avatar" src={avatar} alt="" />}
-                  <div className="chat-bolha">
-                    <div className="chat-bolha-txt">{m.texto}</div>
-                    {m.codigo && <pre className="chat-codigo">{m.codigo}</pre>}
-                  </div>
+            {mensagens.map((m, i) => (
+              <div key={i} className={'chat-msg chat-msg-' + m.de}>
+                <Avatar de={m.de} humor={m.humor} />
+                <div className="chat-bolha">
+                  <div className="chat-bolha-txt">{m.texto}</div>
+                  {m.codigo && <pre className="chat-codigo">{m.codigo}</pre>}
                 </div>
-              )
-            })}
+              </div>
+            ))}
             {digitando && (
               <div className="chat-msg chat-msg-lari">
                 <img className="chat-avatar" src={AVATARES.lari.normal} alt="" />
@@ -296,9 +397,17 @@ export default function TelaChat({
                     className="chat-btn-dica"
                     onClick={pedirDica}
                     disabled={dicaPedida}
-                    title={dicaPedida ? 'Dica ja usada neste exercicio' : 'Pedir dica (-1 energia)'}
+                    title={dicaPedida ? 'Dica ja usada neste exercicio' : 'Pedir dica da Lari (-1 vida)'}
                   >
                     💡
+                  </button>
+                  <button
+                    className="chat-btn-dica"
+                    onClick={abrirDuvida}
+                    disabled={energiaIA <= 0}
+                    title={energiaIA <= 0 ? 'Sem energia para falar com o Albert' : 'Falar com o Albert (-1 energia)'}
+                  >
+                    🧓
                   </button>
                   <button className="chat-btn-enviar" onClick={enviar} disabled={!podeVerificar}>
                     Enviar ▶
@@ -310,7 +419,7 @@ export default function TelaChat({
             {confirmandoDica && (
               <div className="chat-dock-acoes chat-centro">
                 <button className="chat-btn-enviar" onClick={dicaSim}>
-                  Sim (−1 🔋)
+                  Sim (−1 ❤️)
                 </button>
                 <button className="chat-btn-ghost" onClick={dicaNao}>
                   Não
@@ -336,6 +445,69 @@ export default function TelaChat({
           </footer>
         </div>
       </div>
+
+      {duvidaAberta && (
+        <div className="outro-overlay" role="dialog" aria-label="Chat com o Outro">
+          <div className="outro-painel">
+            <header className="outro-top">
+              <img className="chat-avatar" src={ALBERT_ICON} alt="" />
+              <div className="chat-top-titulo">
+                <strong>Albert</strong>
+                <span>Tire sua duvida · ⚡ {energiaIA}</span>
+                {recargaSeg != null && (
+                  <span className="albert-recarga">🕒 Nova energia em: {formatarRecarga(recargaSeg)}</span>
+                )}
+              </div>
+              <button className="chat-btn-ghost" onClick={() => setDuvidaAberta(false)} title="Fechar">
+                ✕
+              </button>
+            </header>
+            <div className="outro-log">
+              {duvidaMsgs.map((m, i) => (
+                <div key={i} className={'chat-msg chat-msg-' + m.de}>
+                  <Avatar de={m.de} humor="normal" />
+                  <div className="chat-bolha">
+                    <div className="chat-bolha-txt">{m.texto}</div>
+                  </div>
+                </div>
+              ))}
+              {duvidaDigitando && (
+                <div className="chat-msg chat-msg-albert">
+                  <img className="chat-avatar" src={ALBERT_ICON} alt="" />
+                  <div className="chat-bolha chat-digitando">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              )}
+              <div ref={duvidaFimRef} />
+            </div>
+            <footer className="outro-dock">
+              <textarea
+                className="proj-code"
+                value={duvidaInput}
+                onChange={(e) => {
+                  setDuvidaInput(e.target.value)
+                  setDuvidaErro('')
+                }}
+                rows={3}
+                placeholder="Pergunte sobre o exercicio ou a linguagem..."
+                aria-label="Sua duvida"
+              />
+              <div className="proj-dock-linha">
+                <span className="proj-hint">
+                  Cada pergunta custa 1 ⚡ (mesmo se for fora do assunto) · voce tem {energiaIA}
+                </span>
+                {duvidaErro && <span className="proj-erro">{duvidaErro}</span>}
+                <button className="chat-btn-enviar" onClick={enviarDuvida} disabled={energiaIA <= 0}>
+                  Perguntar ▶
+                </button>
+              </div>
+            </footer>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

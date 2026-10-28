@@ -15,7 +15,6 @@ import repeticao from './logica/repeticao.js'
 import listas from './logica/listas.js'
 import funcoes from './logica/funcoes.js'
 import boaspraticas from './logica/boaspraticas.js'
-import projetofinal from './logica/projetofinal.js'
 
 export const bloco = {
   id: 'logica',
@@ -34,5 +33,4 @@ export const trilhas = [
   listas,
   funcoes,
   boaspraticas,
-  projetofinal,
 ]

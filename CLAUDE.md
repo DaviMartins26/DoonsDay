@@ -449,3 +449,38 @@ Monetização está fora de escopo (definição do TCC).
   com cara de jogo; e no **Cap. 4 (4.3)** o "Uso do jogo" passou a descrever a conversa com
   a Lari ao longo da Trilha 1 (8 exercícios) com mini-aulas. Cap. 5 segue só renumerado.
   Validado por XSD. Enviado para análise do Davi. **Nada commitado no Git.**
+- **2026-10-25:** **8º tipo (resposta aberta por IA) — mock no app.** Implementado o capstone
+  da Trilha 10 como protótipo SEM backend: nova tela isolada `src/jogo/telas/TelaProjetoIA.jsx`
+  (reusa o visual do chat), FORA do motor dos 7 tipos fechados. `Jogo.jsx` a renderiza quando
+  `exercicio.tipo === 'respostaIA'`. Fluxo: a Lari mostra enunciado + **rubrica**, o aluno
+  entrega o código (textarea; aceita link do GitHub), a "IA" devolve feedback estruturado
+  (resumo + critério a critério ✓/~/✗ + dicas) e o aluno **revisa e reenvia** (sem perder
+  energia) até **aprovado** → **Concluir**. As avaliações vêm de `mockAvaliacoes` no exercício
+  (`projetofinal.js`); trocar o mock por um `POST /api/avaliar` (Azure Function + Claude) é a
+  única mudança quando o backend existir. Design completo em `DESIGN-TIPO-IA.md`. Testes
+  ajustados: o tipo aberto fica fora dos loops de gabarito/render e tem validação própria
+  (rubrica + mockAvaliacoes coerentes, última rodada = aprovado). **437 testes passando.**
+  Validado no navegador (Trilha 10, fluxo inteiro: quase → aprovado → concluir, XP 100).
+  (Nada commitado ainda.)
+- **2026-10-27:** **Pivot do uso de IA: chat de dúvidas com o "Albert".** Em vez do
+  capstone de código avaliado por IA (em reavaliação), a IA passa a ser um **chat de
+  dúvidas** dentro do app. Novo personagem **Albert** (robô sábio e ancião, "da gestão
+  anterior" — gag que explica, na lore, o estilo de arte diferente): o aluno pergunta
+  sobre o exercício ou a linguagem e ele responde (mock em `TelaChat.jsx`; depois, Claude
+  real — mesma decisão de chave do `DESIGN-TIPO-IA.md`). Botão 🧓 ao lado da dica (💡) no
+  dock; overlay com ícone real (`public/chat/albert/icone.png`). **Renomeação energia→Vida**:
+  a energia de errar exercício virou **Vida** (❤️); e **Energia** (⚡) passou a ser a moeda
+  do chat com o Albert (config/HUD/telas/lore). **Dica da Lari custa 1 vida** (não é grátis).
+  **Cronômetro** de recarga (24h) aparece no HUD e no overlay quando a energia < máx — **só
+  visual** por ora (recarga real fica pro futuro/usuário). **Aviso** no Albert: pergunta fora
+  do assunto ou imprópria gasta energia do mesmo jeito. **Intro**: novo quadro (5/7) em que a
+  Lari apresenta o Albert, com arte real (`public/quadrinhos/intro/QuadroAlbert.jpeg`). 437
+  testes passando. Plano/decisões em `PIVOT-CHAT-OUTRO.md`. (Nada commitado ainda.)
+- **2026-10-27:** **Trilha 10 (Projeto Final / capstone `respostaIA`) removida.** Com o pivot
+  para o chat de dúvidas com o Albert, o capstone de código avaliado por IA saiu: desregistrado
+  em `trilhas/index.js` (bloco agora com **9 trilhas**), removido o branch `respostaIA` e o import
+  em `Jogo.jsx`, e **deletados** `src/trilhas/logica/projetofinal.js` e
+  `src/jogo/telas/TelaProjetoIA.jsx`. Testes revertidos (sem o split fechados/abertos nem o
+  describe do capstone): **434 passando**, catálogo com 9 trilhas, sem erros no console (load
+  limpo). A ideia do capstone fica registrada em `DESIGN-TIPO-IA.md` (histórico). (Nada
+  commitado ainda.)

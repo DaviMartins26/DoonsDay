@@ -6,7 +6,7 @@ export default function TelaConclusao({ xpTotal, vidas, aoRecomecar, aoVoltar })
         <h1>DevForge</h1>
         <h2>Trilha concluida!</h2>
         <p>XP total: {xpTotal}</p>
-        <p>Energia restante: {vidas}</p>
+        <p>Vida restante: {vidas}</p>
         <div className="df-acoes">
           <button type="button" className="df-primario" onClick={aoRecomecar}>
             Recomecar
