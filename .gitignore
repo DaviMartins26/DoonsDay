@@ -2,3 +2,10 @@ node_modules/
 dist/
 *.local
 .DS_Store
+
+# Segredos: a chave da IA (Gemini/Claude) nunca vai pro Git.
+# O modelo fica em server/.env.example (versionado); o real, em server/.env.
+.env
+server/.env
+*.env
+!*.env.example

@@ -484,3 +484,35 @@ Monetização está fora de escopo (definição do TCC).
   describe do capstone): **434 passando**, catálogo com 9 trilhas, sem erros no console (load
   limpo). A ideia do capstone fica registrada em `DESIGN-TIPO-IA.md` (histórico). (Nada
   commitado ainda.)
+- **2026-10-29:** **IA real do Albert ligada** — o chat de dúvidas deixou de ser
+  mock e passou a responder de verdade via **API de nuvem**, com a chave
+  escondida num backend. **Fornecedor: Gemini** (Google AI Studio, free tier) no
+  lugar do Claude para o MVP — a assinatura Claude Pro não dá acesso de API e a
+  API da Anthropic é paga; o Gemini tem camada gratuita real. Respeita a decisão
+  do TCC ("IA via API de nuvem"), muda só o fornecedor; Claude fica como
+  alternativa de 1 linha no `.env`. Ollama/VM Azure avaliados e descartados pro
+  MVP (custo de GPU; segue "trabalho futuro"). Nova camada `server/`:
+  `iaProvider.mjs` (cérebro agnóstico gemini/claude/mock, Node puro, portável pra
+  Azure Function), `albertVitePlugin.mjs` (serve `POST /api/albert` no próprio dev
+  server do Vite — um comando, sem 2º terminal nem CORS; sem chave/erro devolve
+  503) e `src/ia/albert.js` (cliente do front; backend fora → mock local, chat
+  não quebra). Chave em `server/.env` (gitignorada: `*.env` + exceção
+  `*.env.example`); modelo `server/.env.example` versionado. Segurança: chave
+  nunca no front; ao modelo vai só enunciado/código/tipo (**nunca o gabarito**);
+  system prompt impõe scaffolding + texto puro (sem markdown/LaTeX). Modelo
+  `gemini-flash-lite-latest` (~4s). Verificado no navegador (Albert responde no
+  personagem, recusa dar a resposta, ⚡ cai 1/pergunta). Instalado `jsdom` que
+  faltava no `node_modules`. **434 testes passando.** Doc em `server/README.md` e
+  `PIVOT-CHAT-OUTRO.md` (seção 8). (Nada commitado ainda.)
+- **2026-10-29:** **Albert pronto pra produção no Azure (SWA).** O backend que só
+  existia em dev (plugin do Vite) ganhou par de produção: criada a pasta `api/`
+  com uma **Azure Function** (modelo Node v4, `api/src/functions/albert.mjs` +
+  `host.json` + `package.json`) servindo a mesma rota `/api/albert`. O cérebro
+  agnóstico saiu de `server/` para `api/shared/iaProvider.mjs` e é **reusado**
+  pelos dois (dev e prod) — sem duplicar lógica; o plugin dev passou a importar de
+  lá. Workflow do SWA ajustado: `api_location: "api"`. Assim, no push da `main`, o
+  GitHub Actions publica a Function junto com o site. Falta **só** o passo manual
+  (não automatizável daqui): pôr `GEMINI_API_KEY`/`IA_PROVIDER`/`GEMINI_MODEL` nas
+  *Application settings* do Azure — enquanto não, o site publicado abre e o chat
+  cai no mock. Cabe no free tier do SWA. Dev retestado (200/gemini) após a
+  mudança; instruções em `server/README.md`. (Nada commitado ainda.)

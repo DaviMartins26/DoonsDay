@@ -86,6 +86,45 @@ avisa** que pergunta fora do assunto ou imprópria gasta energia do mesmo jeito.
 A **Trilha 10 (capstone `respostaIA`) foi removida** do app (bloco com 9 trilhas);
 a ideia do capstone fica registrada em `DESIGN-TIPO-IA.md`.
 
+## 8. IA real ligada (2026-10-29) — mock substituído por backend + Gemini
+
+A pendência central ("resposta real da IA") foi resolvida. O Albert agora
+responde de verdade via API de nuvem, com a chave escondida num backend.
+
+**Decisão de fornecedor:** adotado o **Gemini** (Google AI Studio, free tier)
+no lugar do Claude para o MVP. Motivo: o Gemini tem **camada de API gratuita de
+verdade** (a assinatura Claude Pro não dá acesso de API; a API da Anthropic é
+paga — barata, mas exige conta e cartão). A decisão do TCC ("IA via **API de
+nuvem**") é respeitada; muda só o fornecedor. O Claude fica como **alternativa
+de 1 linha** no `.env`. Execução local (Ollama/VM) foi avaliada e descartada
+para o MVP (custo de hospedar GPU; segue como "trabalho futuro", como já previa
+o `CLAUDE.md`).
+
+**Arquitetura (ver `server/README.md`):**
+- `server/iaProvider.mjs` — cérebro agnóstico de fornecedor (`gemini`/`claude`/
+  `mock`); Node puro, portável pra uma Azure Function depois.
+- `server/albertVitePlugin.mjs` — serve `POST /api/albert` no próprio dev server
+  do Vite (um comando, sem segundo terminal, sem CORS). Sem chave/erro → `503`.
+- `src/ia/albert.js` — cliente do front; se o backend cair, usa o mock local
+  (`respostaMockAlbert()`), então o chat nunca quebra.
+- Chave em `server/.env` (fora do Git); modelo `server/.env.example` versionado.
+
+**Segurança/pedagogia:** a chave nunca vai ao front. Ao modelo mandamos só
+enunciado/código/tipo do exercício — **nunca o gabarito** — e a system prompt
+impõe o scaffolding (orientar sem entregar a resposta), em texto puro.
+
+**Modelo:** `gemini-flash-lite-latest` (rápido ~4s, sempre atual). Verificado no
+navegador: Albert responde no personagem e recusa dar a resposta pronta; a
+energia (⚡) cai 1 por pergunta. 434 testes passando.
+
+Produção (Azure SWA) já preparada: pasta `api/` com a Azure Function servindo
+`/api/albert` (mesmo cérebro `api/shared/iaProvider.mjs`), `api_location: "api"`
+no workflow. No push da `main` a Function é publicada; falta só pôr a chave nas
+*Application settings* do Azure (ver `server/README.md`).
+
+Pendente ainda: configurar a chave no Azure; recarga real de energia; documentar
+a troca Claude→Gemini no documento da Entrega II.
+
 ## 7. Prompt de concept art do Albert (Gemini)
 
 > Rodar no Gemini usando a arte da Lari como **referência de estilo** (mesmo mundo).

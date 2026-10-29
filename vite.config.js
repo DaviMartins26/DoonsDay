@@ -5,9 +5,12 @@
 // temResposta) - nao renderizam componentes.
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
+import { albertDevApi } from './server/albertVitePlugin.mjs'
 
 export default defineConfig({
-  plugins: [react()],
+  // albertDevApi: backend do chat de duvidas (POST /api/albert) servido pelo
+  // proprio dev server. So atua no "npm run dev"; nao afeta build nem testes.
+  plugins: [react(), albertDevApi()],
   test: {
     environment: 'node',
     include: ['src/**/*.test.{js,jsx}'],

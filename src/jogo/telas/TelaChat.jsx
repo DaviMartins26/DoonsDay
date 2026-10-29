@@ -20,6 +20,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { CampoResposta } from '../../exercicios/registro.jsx'
 import { ENERGIA_IA_INICIAL } from '../../config.js'
+import { perguntarAlbert, respostaMockAlbert } from '../../ia/albert.js'
 
 // Rostos por personagem e humor (em public/chat/...). normal = padrao.
 const AVATARES = {
@@ -98,13 +99,6 @@ const PERDA_ENERGIA = [
   'Ih... essa custou 1 de vida. Bora com calma!',
   'Opa, la se foi 1 de vida. Respira e tenta de novo.',
   'Esse erro custou vida. Sem pressa, voce consegue.',
-]
-// Aberturas do Albert (robo sabio anciao) nas respostas de duvida (mock).
-const ALBERT_ABERTURAS = [
-  'Boa pergunta, jovem aprendiz.',
-  'Hmm. Deixa este velho circuito pensar...',
-  'Entendo tua duvida.',
-  'Ja processei muitos bugs em meus longos ciclos.',
 ]
 // Formata o cronometro de recarga de energia (ex.: "23h 59m 58s").
 function formatarRecarga(s) {
@@ -275,7 +269,7 @@ export default function TelaChat({
     aoCancelarDica()
   }
 
-  // ---- Chat de duvidas com o Outro (mock, sem backend ainda) ---------------
+  // ---- Chat de duvidas com o Albert (IA real via backend /api/albert) ------
   function abrirDuvida() {
     if (!duvidaMsgs.length) {
       setDuvidaMsgs([
@@ -304,19 +298,16 @@ export default function TelaChat({
     setDuvidaMsgs((m) => [...m, { de: 'nos', texto: q }])
     aoGastarEnergiaIA()
     setDuvidaDigitando(true)
-    // MOCK: aqui, no futuro, entra a chamada real ao Claude (ver DESIGN-TIPO-IA.md).
-    setTimeout(() => {
-      setDuvidaDigitando(false)
-      setDuvidaMsgs((m) => [
-        ...m,
-        {
-          de: 'albert',
-          texto:
-            sortear(ALBERT_ABERTURAS) +
-            ' Acompanhe o codigo linha por linha e teste com um exemplo pequeno; costuma revelar o ponto. (resposta de exemplo - aqui vai entrar o Claude de verdade.)',
-        },
-      ])
-    }, 800)
+    // Pergunta ao Albert de verdade (backend /api/albert -> Gemini/Claude). Se a
+    // IA estiver offline/sem chave, cai no mock local - o chat nao quebra.
+    perguntarAlbert({ pergunta: q, exercicio })
+      .then((texto) => {
+        setDuvidaMsgs((m) => [...m, { de: 'albert', texto }])
+      })
+      .catch(() => {
+        setDuvidaMsgs((m) => [...m, { de: 'albert', texto: respostaMockAlbert() }])
+      })
+      .finally(() => setDuvidaDigitando(false))
   }
 
   const respondendo = resultado === null && !confirmandoDica && !digitando
