@@ -16,10 +16,11 @@ somando **73 exercícios** em Python, com energia, streak, XP, dicas e coloraç�
 das respostas. O conteúdo é baseado na ementa de **Raciocínio Algorítmico** (1º
 período); o mapeamento de cada exercício ao material de origem está em
 [`METODOLOGIA-EXERCICIOS.md`](METODOLOGIA-EXERCICIOS.md) e a metodologia pedagógica
-em [`METODOLOGIA-TRILHA1.md`](METODOLOGIA-TRILHA1.md). Ainda **não há backend nem
-Inteligência Artificial** nesta etapa — a correção é feita localmente, no
-navegador — e há uma suíte de testes (`npm test`) que valida o gabarito de todos
-os exercícios.
+em [`METODOLOGIA-TRILHA1.md`](METODOLOGIA-TRILHA1.md). A correção dos exercícios é
+feita **localmente** no navegador (sem backend), e há uma suíte de testes
+(`npm test`) que valida o gabarito de todos os exercícios. Há também um **chat de
+dúvidas com IA** (o personagem Albert): este sim usa um backend que esconde a
+chave e chama uma API de nuvem (Gemini) — já no ar no Azure. Ver `server/README.md`.
 
 > As seções abaixo descrevem a mecânica do jogo e os tipos de exercício; algumas
 > ainda citam a trilha de exemplo original. Para o estado atual detalhado, veja o
@@ -35,10 +36,14 @@ os exercícios.
 | **Vite 5** | Ferramenta de build e servidor de desenvolvimento (o `localhost`). |
 | **JavaScript (ES Modules)** | Linguagem do projeto. Sem TypeScript por enquanto. |
 | **HTML + CSS mínimo** | Layout propositalmente cru, quase sem estilo. |
+| **Backend (plugin Vite em dev / Azure Functions em produção)** | Esconde a chave da IA e expõe a rota `/api/albert`. |
+| **Gemini (Google AI Studio)** | API de nuvem que responde o chat de dúvidas do Albert (free tier). |
 
-Não há banco de dados, servidor próprio nem chamadas de rede: tudo roda no
-navegador. As respostas e a pontuação vivem apenas na memória da página (ao
-recarregar, tudo recomeça).
+A correção dos exercícios roda no navegador (sem banco e sem servidor); as
+respostas e a pontuação vivem só na memória da página (ao recarregar, recomeça).
+A **exceção** é o chat de dúvidas com o Albert, que chama um backend em
+`/api/albert` — em desenvolvimento, um plugin do Vite; em produção, uma Azure
+Function no Static Web Apps. A chave da IA fica só no backend, nunca no navegador.
 
 ---
 
@@ -130,9 +135,10 @@ conforme o estado do jogo):
 
 ## Tipos de exercício
 
-A trilha de exemplo traz um exercício de cada tipo. A correção de todos é local
-(sem IA). O 8º tipo previsto no TCC — **resposta aberta corrigida por IA** —
-ainda não foi incluído (depende da integração com a IA; ver o `CLAUDE.md`).
+A correção dos 7 tipos é **local** (sem IA). O 8º tipo antes previsto (resposta
+aberta corrigida por IA) foi **repensado**: no lugar dele, a IA do projeto virou
+um **chat de dúvidas com o Albert** dentro do jogo, que orienta sem entregar a
+resposta (scaffolding). Ver `PIVOT-CHAT-OUTRO.md` e `server/README.md`.
 
 1. **Múltipla escolha** — o usuário escolhe uma entre várias opções.
 2. **Preenchimento de lacuna** — o usuário digita o trecho que falta no código

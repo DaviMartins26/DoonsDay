@@ -516,3 +516,21 @@ Monetização está fora de escopo (definição do TCC).
   *Application settings* do Azure — enquanto não, o site publicado abre e o chat
   cai no mock. Cabe no free tier do SWA. Dev retestado (200/gemini) após a
   mudança; instruções em `server/README.md`. (Nada commitado ainda.)
+- **2026-10-29:** **Albert em produção no Azure — verificado funcionando.** Rodada
+  commitada e publicada: commit `d47930b` (`feat(ia): chat do Albert com IA real
+  (Gemini) + backend agnostico`) na `main`; deploy #17 do GitHub Actions (Azure
+  Static Web Apps) concluído com sucesso. Configuradas as **Application settings**
+  do SWA `MVP-ForgeDev` (grupo `rg-devforge`, assinatura Azure for Students):
+  `IA_PROVIDER=gemini`, `GEMINI_MODEL=gemini-flash-lite-latest` e `GEMINI_API_KEY`
+  (a chave colada pelo Davi — fica só no Azure, nunca no repo). **Albert testado na
+  URL pública do SWA e respondendo de verdade** (fora do mock). Resumo das 3
+  variáveis: `IA_PROVIDER` escolhe o fornecedor (gemini/claude/mock), `GEMINI_MODEL`
+  escolhe o modelo, `GEMINI_API_KEY` autentica (única secreta). Com isso o fluxo
+  React → /api/albert → Gemini está de ponta a ponta em dev e em produção.
+- **2026-10-29:** **Documentação da camada de IA** para aproveitar no documento da
+  Entrega II. Criado `IA-CHAT-ALBERT.md` (síntese: visão geral, fundamentação
+  pedagógica, arquitetura, decisões, segurança, deploy, as 3 variáveis, mapeamento a
+  requisitos, limitações/futuro, status). `README.md` atualizado: deixou de dizer
+  "sem backend/IA" — descreve o chat de dúvidas com o Albert, o backend (`/api/albert`,
+  plugin do Vite em dev e Azure Function em produção) e o Gemini como tecnologia; o 8º
+  tipo passou a apontar o pivot. (Nada commitado ainda nesta rodada de docs.)
