@@ -26,6 +26,16 @@ foi repensada — ver seção 9.
   **orientar e dar pistas, nunca escrever a solução**. Se o aluno pede "a
   resposta", o Albert recusa com gentileza e devolve uma pergunta que o faça
   pensar. Isso preserva a aprendizagem ativa.
+- **Resposta didática com exemplo paralelo:** como o chat é um recurso que custa
+  energia ao aluno, o Albert não responde com um texto seco — ele **ensina o
+  conceito** (o porquê, com analogia quando ajuda), **sempre dá um exemplo
+  concreto em Python** e **fecha afirmando** (um incentivo que passa confiança de
+  que o aluno consegue resolver — pode ser uma pergunta retórica de ânimo, nunca
+  uma pergunta aberta que o deixe na dúvida ou cobrando mais dele).
+  O exemplo é **sempre de um caso diferente do exercício** (valores/contexto
+  outros), para ilustrar o padrão **sem entregar** o código que resolve a questão
+  atual. A resposta vem em parágrafos curtos (texto puro, sem markdown) para ler
+  limpo no chat.
 - **Human-in-the-loop:** a IA é apoio, não autoridade final. O aluno continua
   decidindo e resolvendo; a correção dos exercícios fechados segue local e
   determinística (gabarito), sem IA.
@@ -124,6 +134,19 @@ Resumindo: `IA_PROVIDER` escolhe o **fornecedor**, `GEMINI_MODEL` escolhe o
 
 ## 9. Limitações e trabalhos futuros
 
+- **Limites da API (free tier do Gemini):** o modelo de produção
+  (`gemini-flash-lite-latest`, Gemini 2.5 Flash-Lite) no free tier é limitado a
+  cerca de **15 requisições por minuto (RPM)**, **250.000 tokens por minuto (TPM)**
+  e **1.000 requisições por dia (RPD)**. Como cada pergunta ao Albert é 1
+  requisição e o gargalo é o RPM, o app responde a **~15 perguntas por minuto no
+  total**. Dois pontos importantes: (a) **o limite é por projeto, não por
+  usuário** — a chave é única, então esse teto é **somado entre todos os alunos**
+  que estiverem perguntando no mesmo minuto; ao estourar, a chamada volta HTTP 429
+  (o front cai no mock, **não** gera cobrança). (b) Os valores **mudam e variam por
+  projeto** — o número ativo deve ser conferido no Google AI Studio. Para a escala
+  de demonstração do TCC é folgado; para muitos usuários simultâneos exigiria tier
+  pago ou fila. O TPM não é o gargalo (cada resposta gasta ~1.200 tokens). Fontes:
+  documentação oficial de *rate limits* do Gemini (ai.google.dev/gemini-api/docs/rate-limits).
 - **Recarga de energia (⚡):** o cronômetro de 24 h é hoje **só visual**; a recarga
   real fica para depois.
 - **Troca para Claude:** suportada por configuração (sem mexer no código), quando

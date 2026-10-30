@@ -534,3 +534,24 @@ Monetização está fora de escopo (definição do TCC).
   "sem backend/IA" — descreve o chat de dúvidas com o Albert, o backend (`/api/albert`,
   plugin do Vite em dev e Azure Function em produção) e o Gemini como tecnologia; o 8º
   tipo passou a apontar o pivot. (Nada commitado ainda nesta rodada de docs.)
+- **2026-10-30:** **Prompt do Albert mais didático.** O system prompt em
+  `api/shared/iaProvider.mjs` deixou de pedir resposta "breve (2 a 4 frases), sem
+  listas" e passou a pedir uma resposta de **professor que ensina de verdade** (o
+  chat custa energia ao aluno): explicar o conceito com as próprias palavras (o
+  porquê, com analogia quando ajuda), **sempre dar um exemplo concreto em Python**
+  e fechar com uma pergunta/dica que empurra o próximo passo. O exemplo é **sempre
+  de um caso diferente do exercício** (ilustra o padrão **sem entregar** o código
+  que resolve a questão atual — scaffolding mantido). Formato: parágrafos curtos
+  separados por linha em branco (a bolha já é `white-space: pre-line`), texto puro
+  (sem markdown/LaTeX), código uma instrução por linha sem indentar (indentação
+  colapsaria no `pre-line`). `maxOutputTokens`/`max_tokens` subiu de 400 para 700
+  (explicação + exemplo não cabiam em 400) nos dois fornecedores (Gemini e Claude).
+  Vale em dev e produção (mesmo cérebro). `IA-CHAT-ALBERT.md` atualizado. (Nada
+  commitado ainda.)
+- **2026-10-30:** Ajuste no fecho da resposta do Albert (feedback do Davi). O
+  passo 3 do prompt deixou de pedir "pergunta que empurra o próximo passo" (uma
+  pergunta aberta podia deixar o aluno iniciante na dúvida) e passou a exigir um
+  **fecho afirmativo e encorajador**, que passa confiança de que o aluno consegue
+  resolver com o que aprendeu — pode ser frase motivadora ou pergunta retórica de
+  incentivo, mas **nunca** uma pergunta aberta que pareça cobrar mais dele.
+  Testado ao vivo (Gemini). `IA-CHAT-ALBERT.md` atualizado. (Nada commitado ainda.)
