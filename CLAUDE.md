@@ -555,3 +555,28 @@ Monetização está fora de escopo (definição do TCC).
   resolver com o que aprendeu — pode ser frase motivadora ou pergunta retórica de
   incentivo, mas **nunca** uma pergunta aberta que pareça cobrar mais dele.
   Testado ao vivo (Gemini). `IA-CHAT-ALBERT.md` atualizado. (Nada commitado ainda.)
+- **2026-10-31:** **Refatoração do `TelaChat.jsx` (504 -> ~205 linhas) + comentários
+  didáticos.** Motivo: feedback do orientador sobre o entendimento do código pela equipe;
+  o TelaChat estava grande demais para ler/manter. A lógica e as pecinhas visuais foram
+  separadas numa pasta nova `src/jogo/telas/chat/`: `chatUtils.js` (constantes + funções
+  puras: resumirResposta, gabaritoLinhas, formatarRecarga, sortear, falas da Lari),
+  `componentes.jsx` (Avatar, Mensagem, IndicadorDigitando, reusados nos dois chats),
+  `useChatLari.js` (custom hook com o estado e os efeitos da conversa com a Lari),
+  `useAlbert.js` (custom hook do chat de dúvidas do Albert) e `AlbertOverlay.jsx` (só a
+  janela do Albert). O `TelaChat.jsx` virou um "montador" fino que chama os dois hooks e
+  desenha cabeçalho/HUD, conversa e dock. Comentários fartos explicando os idiomas (.map,
+  useState/useEffect/useRef, Promise .then/.catch/.finally, spread, ?. e ??) para servir
+  de material de estudo. Comportamento idêntico (mesmas props, mesmas classes CSS): **434
+  testes passando** e smoke test no navegador OK (chat, Albert, HUD), console limpo. Serve
+  de referência para a reescrita própria da Trilha 1 pelo Davi na pasta `DevForger`. (Nada
+  commitado ainda.)
+- **2026-10-31:** **README.md reescrito como "gabarito" de funcionamento.** O README
+  estava muito desatualizado (falava em 10 trilhas/73 exercicios, 3 vidas, TelaExercicio).
+  Reescrito do zero explicando o projeto passo a passo ("tintin por tintin") com a
+  nomenclatura real do DoonsDay: o fluxo do App.jsx (abertura -> catalogo -> intro ->
+  Jogo), o Jogo.jsx como motor de uma trilha, o TelaChat + pasta chat/, o registro como
+  despachante, a separacao dados x logica (trilhas = conteudo; exercicios/ + motor =
+  logica), as mecanicas (Vida x Energia, valores reais do config), os 7 tipos, o chat do
+  Albert (arquitetura/seguranca) e a estrutura de pastas atual. Numeros conferidos: 9
+  trilhas x 8 = 72 exercicios, 434 testes. Feito a pedido do Davi como material de estudo
+  para a defesa. (Nada commitado ainda.)

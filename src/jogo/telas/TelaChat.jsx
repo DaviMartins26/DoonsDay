@@ -1,116 +1,28 @@
 // ============================================================================
 // TelaChat.jsx - resolver exercicios como uma conversa com a Lari
 // ----------------------------------------------------------------------------
-// Mesma API de props da TelaExercicio (vem do motor Jogo.jsx) - aqui so muda a
-// APRESENTACAO: a Lari manda o exercicio como mensagem, a resposta e enviada, ela
-// "digita" (...) e responde certo/errado; acertando, manda o proximo. A dica
-// tambem vira conversa (confirma -> troca 1 de energia -> dica como mensagem).
+// Esta tela recebe as mesmas props da antiga TelaExercicio (vindas do motor
+// Jogo.jsx): o que muda e so a APRESENTACAO - em vez de um formulario, uma
+// conversa. A Lari manda o exercicio como mensagem, o aluno responde, ela
+// "digita" e responde certo/errado; acertando, manda o proximo. Ha tambem a dica
+// (negociada na conversa) e o chat de duvidas com o Albert (a IA).
 //
-// Cada mensagem tem "de" (quem fala) e "humor" (normal/dica/erro): o AVATAR muda
-// conforme o personagem e o humor. Hoje so a Lari fala; para outra trilha ter
-// outro personagem mandando as mensagens, basta adicionar os rostos dele em
-// AVATARES e usar push('<personagem>', ...). O rosto do jogador ("nos") nao e
-// mostrado (decisao de design).
-//
-// O campo de resposta (CampoResposta) e REUSADO como dock de entrada, entao os 7
-// tipos de exercicio funcionam sem alteracao. Historico some ao dar F5 (ainda nao
-// ha persistencia).
+// Para a tela nao ficar gigante, a LOGICA foi separada em dois "custom hooks" e
+// as pecinhas visuais em componentes (pasta ./chat/):
+//   - useChatLari  -> toda a conversa com a Lari (estado + o que fazer)
+//   - useAlbert    -> todo o chat de duvidas com o Albert
+//   - Mensagem / IndicadorDigitando -> bolhas e "...digitando"
+//   - AlbertOverlay -> a janela do Albert
+// Aqui a TelaChat so "monta" essas pecas e desenha o cabecalho, a conversa e o
+// rodape (dock) com o campo de resposta e os botoes.
 // ============================================================================
 
-import { useState, useEffect, useRef } from 'react'
 import { CampoResposta } from '../../exercicios/registro.jsx'
-import { ENERGIA_IA_INICIAL } from '../../config.js'
-import { perguntarAlbert, respostaMockAlbert } from '../../ia/albert.js'
-
-// Rostos por personagem e humor (em public/chat/...). normal = padrao.
-const AVATARES = {
-  lari: {
-    normal: '/chat/lari/normal.png',
-    dica: '/chat/lari/duvida.png',
-    erro: '/chat/lari/erro.png',
-  },
-}
-// Rosto do Albert no chat (uma arte so; ele e da "gestao anterior", estilo diferente).
-const ALBERT_ICON = '/chat/albert/icone.png'
-
-// Resume a resposta do usuario em texto, para mostrar na bolha "nos".
-function resumirResposta(exercicio, resposta) {
-  switch (exercicio.tipo) {
-    case 'multipla':
-      return exercicio.opcoes?.[resposta] ?? '(sem resposta)'
-    case 'acharErro':
-      return 'Linha ' + (resposta + 1)
-    case 'contrastantes':
-      return exercicio.versoes?.[resposta]?.rotulo ?? '(sem resposta)'
-    case 'lacuna':
-      return resposta ? '"' + resposta + '"' : '(vazio)'
-    case 'saidaMultipla':
-      // Uma saida por linha (ex.: "Saida 1: 8"), nao tudo grudado.
-      return Array.isArray(resposta)
-        ? exercicio.rotulos.map((rotulo, i) => rotulo + ': ' + resposta[i]).join('\n')
-        : ''
-    case 'associacao':
-      // Uma ligacao por linha (ex.: "42 → int"), igual a bolha da Lari.
-      return Array.isArray(resposta)
-        ? (exercicio.esquerda || []).map((item, i) => item + ' → ' + resposta[i]).join('\n')
-        : ''
-    case 'parsons':
-      return Array.isArray(resposta) ? resposta.join('  /  ') : ''
-    default:
-      return String(resposta)
-  }
-}
-
-// Gabarito "quebrado por linha", para a Lari mostrar a resposta no mesmo formato
-// da nossa bolha (uma coisa por linha). Vale para os tipos com VARIAS respostas:
-// saidaMultipla ("Saida 1: 8"...) e associacao/fios ("42 → int"...). Nos demais
-// tipos (uma resposta so) devolve null (nao mostra nada a mais).
-function gabaritoLinhas(exercicio) {
-  if (exercicio.tipo === 'saidaMultipla') {
-    const rotulos = exercicio.rotulos || []
-    const respostas = exercicio.respostas || []
-    if (rotulos.length <= 1) return null
-    return rotulos.map((rotulo, i) => rotulo + ': ' + respostas[i]).join('\n')
-  }
-  if (exercicio.tipo === 'associacao') {
-    const esquerda = exercicio.esquerda || []
-    const correto = exercicio.correto || []
-    if (!esquerda.length) return null
-    return esquerda.map((item, i) => item + ' → ' + correto[i]).join('\n')
-  }
-  return null
-}
-
-// Falas da Lari para deixar a conversa mais humana (sorteadas a cada uso).
-const SAUDACOES = [
-  'Bora comecar! Primeiro desafio:',
-  'Vamos nessa! Da uma olhada:',
-  'Comecando a trilha - primeira missao:',
-  'Preparada? Entao olha so:',
-]
-const PONTES = [
-  'Boa, acertou mais uma! Agora o problema e:',
-  'Mandou bem! Proximo desafio:',
-  'Isso ai! Bora pro proximo:',
-  'Show de bola! Segura essa:',
-  'Perfeito, mais um ponto! Agora essa:',
-]
-const PERDA_ENERGIA = [
-  'Ih... essa custou 1 de vida. Bora com calma!',
-  'Opa, la se foi 1 de vida. Respira e tenta de novo.',
-  'Esse erro custou vida. Sem pressa, voce consegue.',
-]
-// Formata o cronometro de recarga de energia (ex.: "23h 59m 58s").
-function formatarRecarga(s) {
-  const h = Math.floor(s / 3600)
-  const m = Math.floor((s % 3600) / 60)
-  const sec = s % 60
-  const dois = (n) => String(n).padStart(2, '0')
-  return `${h}h ${dois(m)}m ${dois(sec)}s`
-}
-function sortear(frases) {
-  return frases[Math.floor(Math.random() * frases.length)]
-}
+import { formatarRecarga } from './chat/chatUtils.js'
+import { Mensagem, IndicadorDigitando } from './chat/componentes.jsx'
+import { AlbertOverlay } from './chat/AlbertOverlay.jsx'
+import { useChatLari } from './chat/useChatLari.js'
+import { useAlbert } from './chat/useAlbert.js'
 
 export default function TelaChat({
   trilhaTitulo,
@@ -138,193 +50,35 @@ export default function TelaChat({
   energiaIA,
   aoGastarEnergiaIA,
 }) {
-  const [mensagens, setMensagens] = useState([])
-  const [digitando, setDigitando] = useState(false)
-  const fimRef = useRef(null)
-  const perguntaFeitaRef = useRef(null) // id do exercicio cuja pergunta ja foi enviada
-  const aguardaFeedbackRef = useRef(false)
-  const vidasAntesRef = useRef(vidas) // energia ANTES de verificar (p/ detectar a perda)
-  const aulaFeitaRef = useRef(false) // se a mini-aula da trilha ja foi mostrada
+  // Conversa com a Lari: o hook devolve as mensagens, se ela esta "digitando", a
+  // marca do fim da lista (para rolar) e as acoes dos botoes.
+  const lari = useChatLari({
+    exercicio,
+    indice,
+    aula,
+    resultado,
+    textoErro,
+    vidas,
+    resposta,
+    aoVerificar,
+    aoPedirDica,
+    aoConfirmarDica,
+    aoCancelarDica,
+  })
 
-  // Overlay "Falar com o Outro": chat de duvidas com a IA. Moeda propria
-  // (energiaIA): cada pergunta custa 1. Respostas MOCKADAS por enquanto.
-  const [duvidaAberta, setDuvidaAberta] = useState(false)
-  const [duvidaMsgs, setDuvidaMsgs] = useState([])
-  const [duvidaInput, setDuvidaInput] = useState('')
-  const [duvidaDigitando, setDuvidaDigitando] = useState(false)
-  const [duvidaErro, setDuvidaErro] = useState('')
-  const [recargaSeg, setRecargaSeg] = useState(null) // cronometro (mock) de recarga de energia
-  const duvidaFimRef = useRef(null)
+  // Chat de duvidas com o Albert (a IA): estado e acoes proprias, moeda propria
+  // (energiaIA).
+  const albert = useAlbert({ energiaIA, aoGastarEnergiaIA, exercicio })
 
-  // de = 'lari' | 'nos' (futuramente 'rival', 'chef'...); humor = normal/dica/erro.
-  function push(de, texto, codigo, humor = 'normal') {
-    setMensagens((m) => [...m, { de, texto, codigo, humor }])
-  }
-
-  // A Lari manda a pergunta ao entrar num exercicio novo (uma vez por exercicio).
-  useEffect(() => {
-    if (perguntaFeitaRef.current === exercicio.id) return
-    perguntaFeitaRef.current = exercicio.id
-    // Mini-aula da trilha: a Lari explica um pouco ANTES do 1o exercicio (uma
-    // bolha por frase). So uma vez, so se a trilha tiver "aula".
-    if (indice === 0 && Array.isArray(aula) && aula.length && !aulaFeitaRef.current) {
-      aulaFeitaRef.current = true
-      aula.forEach((frase) => push('lari', frase, undefined, 'normal'))
-    }
-    // Introducao humana: saudacao no 1o exercicio, "ponte" (apos acertar) nos demais.
-    const intro = indice === 0 ? sortear(SAUDACOES) : sortear(PONTES)
-    push('lari', intro + ' ' + exercicio.enunciado, exercicio.codigo, 'normal')
-    // Mini-explicacao do exercicio (campo opcional "nota"): vem DEPOIS do desafio,
-    // explicando/reforcando o conceito necessario. Antes do enunciado parecia que
-    // ela apresentava o exercicio como novidade so depois de ja ter falado dele.
-    if (exercicio.nota) push('lari', exercicio.nota, undefined, 'normal')
-  }, [exercicio.id, exercicio.enunciado, exercicio.codigo, indice, aula])
-
-  // Quando o motor resolve (apos o Enviar), a Lari "digita" e responde.
-  useEffect(() => {
-    if (resultado === null) {
-      aguardaFeedbackRef.current = false
-      return
-    }
-    if (!aguardaFeedbackRef.current) return
-    aguardaFeedbackRef.current = false
-    // Perdeu energia neste erro? (a energia cai a partir do 3o erro no exercicio)
-    const perdeuEnergia = resultado === false && vidas < vidasAntesRef.current
-    setDigitando(true)
-    const t = setTimeout(() => {
-      setDigitando(false)
-      // Gabarito "rico": quando o exercicio traz um campo "gabarito" (uma linha
-      // por saida, ja explicando a conta), a Lari manda UMA so mensagem com ele,
-      // no lugar da frase + gabarito generico.
-      const gabaritoRico = Array.isArray(exercicio.gabarito) ? exercicio.gabarito.join('\n') : null
-      if (resultado) {
-        if (gabaritoRico) {
-          push('lari', gabaritoRico, undefined, 'normal')
-        } else {
-          push('lari', exercicio.feedbackCerto, undefined, 'normal')
-          // Sem gabarito rico: mostra o gabarito generico quebrado por linha.
-          const g = gabaritoLinhas(exercicio)
-          if (g) push('lari', g, undefined, 'normal')
-        }
-      } else {
-        // Na revelacao completa (apos erros suficientes), se houver gabarito rico
-        // ele substitui a frase de erro; senao, frase + gabarito generico.
-        const revelaCompleto = textoErro === exercicio.feedbackErrado
-        if (revelaCompleto && gabaritoRico) {
-          push('lari', gabaritoRico, undefined, 'erro')
-        } else {
-          push('lari', textoErro, undefined, 'erro')
-          if (revelaCompleto) {
-            const g = gabaritoLinhas(exercicio)
-            if (g) push('lari', g, undefined, 'erro')
-          }
-        }
-        if (perdeuEnergia) push('lari', sortear(PERDA_ENERGIA), undefined, 'erro')
-      }
-    }, 650)
-    return () => clearTimeout(t)
-  }, [resultado, textoErro, exercicio.feedbackCerto, exercicio.feedbackErrado, vidas])
-
-  // Rola para o fim a cada mensagem nova / "digitando".
-  useEffect(() => {
-    fimRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [mensagens, digitando])
-
-  // Rola o chat de duvidas (overlay do Albert).
-  useEffect(() => {
-    duvidaFimRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [duvidaMsgs, duvidaDigitando])
-
-  // Cronometro (mock) de recarga: com energia abaixo do maximo, mostra "nova
-  // energia em 24h". Ainda nao recarrega de verdade - so o visual do contador.
-  useEffect(() => {
-    if (energiaIA >= ENERGIA_IA_INICIAL) {
-      setRecargaSeg(null)
-      return
-    }
-    setRecargaSeg((s) => (s == null ? 24 * 3600 : s))
-    const id = setInterval(() => setRecargaSeg((s) => (s == null ? s : Math.max(0, s - 1))), 1000)
-    return () => clearInterval(id)
-  }, [energiaIA])
-
-  function enviar() {
-    vidasAntesRef.current = vidas // guarda a energia atual p/ comparar depois de verificar
-    push('nos', resumirResposta(exercicio, resposta))
-    aguardaFeedbackRef.current = true
-    aoVerificar()
-  }
-  function pedirDica() {
-    push('nos', 'Posso pedir uma dica?')
-    push('lari', 'Claro! A dica custa 1 vida. Quer que eu mostre?', undefined, 'dica')
-    aoPedirDica()
-  }
-  function dicaSim() {
-    push('nos', 'Pode mandar!')
-    push('lari', 'Dica: ' + exercicio.dica, undefined, 'dica')
-    aoConfirmarDica()
-  }
-  function dicaNao() {
-    push('nos', 'Deixa, vou tentar sozinho.')
-    push('lari', 'Isso! Da mais uma olhada com calma.', undefined, 'normal')
-    aoCancelarDica()
-  }
-
-  // ---- Chat de duvidas com o Albert (IA real via backend /api/albert) ------
-  function abrirDuvida() {
-    if (!duvidaMsgs.length) {
-      setDuvidaMsgs([
-        {
-          de: 'albert',
-          texto:
-            'Eu sou o Albert. Pergunte sobre o exercicio ou sobre a linguagem - cada pergunta custa 1 de energia. Aviso: pergunta fora do assunto ou impropria gasta energia do mesmo jeito.',
-        },
-      ])
-    }
-    setDuvidaErro('')
-    setDuvidaAberta(true)
-  }
-  function enviarDuvida() {
-    const q = duvidaInput.trim()
-    if (!q) {
-      setDuvidaErro('Escreva sua duvida primeiro.')
-      return
-    }
-    if (energiaIA <= 0) {
-      setDuvidaErro('Sem energia para perguntar agora.')
-      return
-    }
-    setDuvidaErro('')
-    setDuvidaInput('')
-    setDuvidaMsgs((m) => [...m, { de: 'nos', texto: q }])
-    aoGastarEnergiaIA()
-    setDuvidaDigitando(true)
-    // Pergunta ao Albert de verdade (backend /api/albert -> Gemini/Claude). Se a
-    // IA estiver offline/sem chave, cai no mock local - o chat nao quebra.
-    perguntarAlbert({ pergunta: q, exercicio })
-      .then((texto) => {
-        setDuvidaMsgs((m) => [...m, { de: 'albert', texto }])
-      })
-      .catch(() => {
-        setDuvidaMsgs((m) => [...m, { de: 'albert', texto: respostaMockAlbert() }])
-      })
-      .finally(() => setDuvidaDigitando(false))
-  }
-
-  const respondendo = resultado === null && !confirmandoDica && !digitando
-
-  // Avatar da mensagem: a Lari usa foto; o Outro usa um placeholder (sem arte
-  // ainda); o jogador ("nos") nao mostra rosto.
-  function Avatar({ de, humor }) {
-    if (de === 'lari')
-      return <img className="chat-avatar" src={AVATARES.lari[humor || 'normal']} alt="" />
-    if (de === 'albert') return <img className="chat-avatar" src={ALBERT_ICON} alt="" />
-    return null
-  }
+  // "respondendo" e verdadeiro quando o aluno pode responder agora: ainda nao ha
+  // resultado, nao estamos confirmando dica e a Lari nao esta digitando.
+  const respondendo = resultado === null && !confirmandoDica && !lari.digitando
 
   return (
     <div className="chat-tela">
       <div className="chat-painel">
         <div className="chat-inner">
+          {/* CABECALHO: voltar, titulo da trilha e o HUD (vida, energia, streak, XP) */}
           <header className="chat-top">
             {aoVoltar && (
               <button className="chat-btn-ghost" onClick={aoVoltar} title="Voltar ao catalogo">
@@ -340,37 +94,26 @@ export default function TelaChat({
             <div className="chat-hud">
               <span title="Vida (erros no exercicio)">❤️ {vidas}</span>
               <span title="Energia (chat com o Albert)">⚡ {energiaIA}</span>
-              {recargaSeg != null && (
-                <span title="Recarga da energia do Albert">🕒 {formatarRecarga(recargaSeg)}</span>
+              {/* o cronometro de recarga so aparece quando a energia esta abaixo do maximo */}
+              {albert.recargaSeg != null && (
+                <span title="Recarga da energia do Albert">🕒 {formatarRecarga(albert.recargaSeg)}</span>
               )}
               <span title="Streak">🔥 {streak}</span>
               <span title="XP">✦ {xpTotal}</span>
             </div>
           </header>
 
+          {/* CONVERSA: uma <Mensagem> para cada bolha; o "...digitando" no fim */}
           <div className="chat-log">
-            {mensagens.map((m, i) => (
-              <div key={i} className={'chat-msg chat-msg-' + m.de}>
-                <Avatar de={m.de} humor={m.humor} />
-                <div className="chat-bolha">
-                  <div className="chat-bolha-txt">{m.texto}</div>
-                  {m.codigo && <pre className="chat-codigo">{m.codigo}</pre>}
-                </div>
-              </div>
+            {lari.mensagens.map((m, i) => (
+              <Mensagem key={i} m={m} />
             ))}
-            {digitando && (
-              <div className="chat-msg chat-msg-lari">
-                <img className="chat-avatar" src={AVATARES.lari.normal} alt="" />
-                <div className="chat-bolha chat-digitando">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-            )}
-            <div ref={fimRef} />
+            {lari.digitando && <IndicadorDigitando de="lari" />}
+            <div ref={lari.fimRef} />
           </div>
 
+          {/* RODAPE (dock): muda conforme o momento - responder, confirmar dica,
+              avancar (acertou) ou tentar de novo (errou) */}
           <footer className="chat-dock">
             {respondendo && (
               <>
@@ -386,7 +129,7 @@ export default function TelaChat({
                 <div className="chat-dock-acoes">
                   <button
                     className="chat-btn-dica"
-                    onClick={pedirDica}
+                    onClick={lari.pedirDica}
                     disabled={dicaPedida}
                     title={dicaPedida ? 'Dica ja usada neste exercicio' : 'Pedir dica da Lari (-1 vida)'}
                   >
@@ -394,13 +137,13 @@ export default function TelaChat({
                   </button>
                   <button
                     className="chat-btn-dica"
-                    onClick={abrirDuvida}
+                    onClick={albert.abrirDuvida}
                     disabled={energiaIA <= 0}
                     title={energiaIA <= 0 ? 'Sem energia para falar com o Albert' : 'Falar com o Albert (-1 energia)'}
                   >
                     🧓
                   </button>
-                  <button className="chat-btn-enviar" onClick={enviar} disabled={!podeVerificar}>
+                  <button className="chat-btn-enviar" onClick={lari.enviar} disabled={!podeVerificar}>
                     Enviar ▶
                   </button>
                 </div>
@@ -409,16 +152,16 @@ export default function TelaChat({
 
             {confirmandoDica && (
               <div className="chat-dock-acoes chat-centro">
-                <button className="chat-btn-enviar" onClick={dicaSim}>
+                <button className="chat-btn-enviar" onClick={lari.dicaSim}>
                   Sim (−1 ❤️)
                 </button>
-                <button className="chat-btn-ghost" onClick={dicaNao}>
+                <button className="chat-btn-ghost" onClick={lari.dicaNao}>
                   Não
                 </button>
               </div>
             )}
 
-            {resultado === true && !digitando && (
+            {resultado === true && !lari.digitando && (
               <div className="chat-dock-acoes chat-centro">
                 <button className="chat-btn-enviar" onClick={aoAvancar}>
                   Próxima ▶
@@ -426,7 +169,7 @@ export default function TelaChat({
               </div>
             )}
 
-            {resultado === false && !digitando && (
+            {resultado === false && !lari.digitando && (
               <div className="chat-dock-acoes chat-centro">
                 <button className="chat-btn-enviar" onClick={aoTentarDeNovo}>
                   Tentar de novo ↩
@@ -437,67 +180,21 @@ export default function TelaChat({
         </div>
       </div>
 
-      {duvidaAberta && (
-        <div className="outro-overlay" role="dialog" aria-label="Chat com o Outro">
-          <div className="outro-painel">
-            <header className="outro-top">
-              <img className="chat-avatar" src={ALBERT_ICON} alt="" />
-              <div className="chat-top-titulo">
-                <strong>Albert</strong>
-                <span>Tire sua duvida · ⚡ {energiaIA}</span>
-                {recargaSeg != null && (
-                  <span className="albert-recarga">🕒 Nova energia em: {formatarRecarga(recargaSeg)}</span>
-                )}
-              </div>
-              <button className="chat-btn-ghost" onClick={() => setDuvidaAberta(false)} title="Fechar">
-                ✕
-              </button>
-            </header>
-            <div className="outro-log">
-              {duvidaMsgs.map((m, i) => (
-                <div key={i} className={'chat-msg chat-msg-' + m.de}>
-                  <Avatar de={m.de} humor="normal" />
-                  <div className="chat-bolha">
-                    <div className="chat-bolha-txt">{m.texto}</div>
-                  </div>
-                </div>
-              ))}
-              {duvidaDigitando && (
-                <div className="chat-msg chat-msg-albert">
-                  <img className="chat-avatar" src={ALBERT_ICON} alt="" />
-                  <div className="chat-bolha chat-digitando">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-              )}
-              <div ref={duvidaFimRef} />
-            </div>
-            <footer className="outro-dock">
-              <textarea
-                className="proj-code"
-                value={duvidaInput}
-                onChange={(e) => {
-                  setDuvidaInput(e.target.value)
-                  setDuvidaErro('')
-                }}
-                rows={3}
-                placeholder="Pergunte sobre o exercicio ou a linguagem..."
-                aria-label="Sua duvida"
-              />
-              <div className="proj-dock-linha">
-                <span className="proj-hint">
-                  Cada pergunta custa 1 ⚡ (mesmo se for fora do assunto) · voce tem {energiaIA}
-                </span>
-                {duvidaErro && <span className="proj-erro">{duvidaErro}</span>}
-                <button className="chat-btn-enviar" onClick={enviarDuvida} disabled={energiaIA <= 0}>
-                  Perguntar ▶
-                </button>
-              </div>
-            </footer>
-          </div>
-        </div>
+      {/* A janela do Albert so e desenhada quando foi aberta (albert.aberta). */}
+      {albert.aberta && (
+        <AlbertOverlay
+          energiaIA={energiaIA}
+          msgs={albert.msgs}
+          input={albert.input}
+          setInput={albert.setInput}
+          digitando={albert.digitando}
+          erro={albert.erro}
+          setErro={albert.setErro}
+          recargaSeg={albert.recargaSeg}
+          fimRef={albert.fimRef}
+          aoPerguntar={albert.enviarDuvida}
+          aoFechar={() => albert.setAberta(false)}
+        />
       )}
     </div>
   )
